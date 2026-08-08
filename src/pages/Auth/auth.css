@@ -1,0 +1,314 @@
+/* =========================
+   AUTH PAGE
+========================= */
+
+.auth-page {
+    min-height: 100vh;
+    width: 100%;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    background: #f6f6ff;
+
+    padding: 24px;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   AUTH CARD
+========================= */
+
+.auth-card {
+    width: 100%;
+    max-width: 480px;
+
+    background: #ffffff;
+
+    border: 1px solid #e4e4f2;
+
+    border-radius: 30px;
+
+    padding: 46px 42px;
+
+    box-shadow:
+        0 12px 35px rgba(40, 50, 100, 0.06);
+
+    text-align: center;
+
+    box-sizing: border-box;
+}
+
+
+/* =========================
+   LOGO
+========================= */
+
+.auth-logo {
+    width: 190px;
+    height: auto;
+
+    margin: 0 auto 35px;
+
+    display: block;
+}
+
+
+/* =========================
+   TITLE
+========================= */
+
+.auth-card h1 {
+    margin: 0;
+
+    color: #111827;
+
+    font-size: 30px;
+    font-weight: 700;
+
+    letter-spacing: -0.5px;
+}
+
+
+.auth-subtitle {
+    margin: 12px 0 34px;
+
+    color: #555b6e;
+
+    font-size: 17px;
+
+    line-height: 1.5;
+}
+
+
+/* =========================
+   BUTTONS
+========================= */
+
+.auth-button {
+    width: 100%;
+
+    height: 52px;
+
+    border: none;
+
+    border-radius: 28px;
+
+    font-size: 15px;
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition:
+        transform 0.15s ease,
+        box-shadow 0.15s ease,
+        background 0.15s ease;
+}
+
+
+.auth-button:hover {
+    transform: translateY(-1px);
+}
+
+
+/* Primary */
+
+.auth-button-primary {
+    background: #0757d5;
+
+    color: white;
+
+    box-shadow:
+        0 5px 12px rgba(7, 87, 213, 0.20);
+}
+
+
+.auth-button-primary:hover {
+    background: #064ec2;
+}
+
+
+/* Secondary */
+
+.auth-button-secondary {
+    background: #e3e8ff;
+
+    color: #202536;
+}
+
+
+.auth-button-secondary:hover {
+    background: #d9e0ff;
+}
+
+
+/* =========================
+   OR DIVIDER
+========================= */
+
+.auth-divider {
+    display: flex;
+
+    align-items: center;
+
+    gap: 18px;
+
+    margin: 28px 0;
+}
+
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+
+    flex: 1;
+
+    height: 1px;
+
+    background: #e1e1eb;
+}
+
+
+.auth-divider span {
+    color: #252936;
+
+    font-size: 14px;
+
+    font-weight: 500;
+}
+
+
+/* =========================
+   LOGIN / REGISTER FORM
+========================= */
+
+.form-group {
+    margin-bottom: 20px;
+
+    text-align: left;
+}
+
+
+.form-group label {
+    display: block;
+
+    margin-bottom: 8px;
+
+    color: #252936;
+
+    font-size: 14px;
+
+    font-weight: 600;
+}
+
+
+.form-group input {
+    width: 100%;
+
+    height: 50px;
+
+    padding: 0 16px;
+
+    box-sizing: border-box;
+
+    border: 1px solid #dedee9;
+
+    border-radius: 12px;
+
+    background: #ffffff;
+
+    color: #202536;
+
+    font-size: 15px;
+
+    outline: none;
+
+    transition: border 0.15s ease,
+                box-shadow 0.15s ease;
+}
+
+
+.form-group input:focus {
+    border-color: #0757d5;
+
+    box-shadow:
+        0 0 0 3px rgba(7, 87, 213, 0.10);
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.error-message {
+    margin-bottom: 20px;
+
+    padding: 12px 14px;
+
+    border-radius: 10px;
+
+    background: #fff0f0;
+
+    color: #c62828;
+
+    font-size: 14px;
+
+    text-align: left;
+}
+
+
+/* =========================
+   REGISTER LINK
+========================= */
+
+.register-link {
+    margin-top: 24px;
+
+    color: #777b89;
+
+    font-size: 14px;
+}
+
+
+.register-link span {
+    color: #0757d5;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 600px) {
+
+    .auth-page {
+        padding: 16px;
+    }
+
+    .auth-card {
+        padding: 35px 24px;
+
+        border-radius: 24px;
+    }
+
+    .auth-logo {
+        width: 160px;
+
+        margin-bottom: 28px;
+    }
+
+    .auth-card h1 {
+        font-size: 26px;
+    }
+
+    .auth-subtitle {
+        font-size: 15px;
+    }
+}
