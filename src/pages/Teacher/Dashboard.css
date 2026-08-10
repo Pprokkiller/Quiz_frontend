@@ -1,0 +1,744 @@
+/* =========================================
+   GLOBAL RESET
+========================================= */
+
+* {
+    box-sizing: border-box;
+}
+
+html,
+body,
+#root {
+    margin: 0;
+    padding: 0;
+    width: 100%;
+    min-height: 100%;
+}
+
+body {
+    font-family: Arial, Helvetica, sans-serif;
+    background: #f7f7ff;
+    color: #111827;
+}
+
+
+/* =========================================
+   MAIN DASHBOARD
+========================================= */
+
+.teacher-dashboard {
+    display: flex;
+    width: 100%;
+    min-height: 100vh;
+
+    background: #f7f7ff;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   SIDEBAR
+========================================= */
+
+.sidebar {
+    position: fixed;
+
+    top: 0;
+    left: 0;
+
+    width: 250px;
+    height: 100vh;
+
+    display: flex;
+    flex-direction: column;
+
+    padding: 28px 16px;
+
+    background: #f0f1ff;
+
+    border-right: 1px solid #e3e4f0;
+
+    z-index: 1000;
+
+    overflow-y: auto;
+}
+
+
+/* =========================================
+   LOGO
+========================================= */
+
+.sidebar-logo {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 0 12px;
+
+    margin-bottom: 48px;
+
+    color: #0759d9;
+
+    font-size: 24px;
+    font-weight: 700;
+}
+
+.logo-mark {
+    width: 34px;
+    height: 34px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 9px;
+
+    background: #0865e5;
+
+    color: white;
+
+    font-size: 18px;
+    font-weight: 700;
+}
+
+
+/* =========================================
+   SIDEBAR NAV
+========================================= */
+
+.sidebar-nav {
+    display: flex;
+    flex-direction: column;
+
+    gap: 8px;
+}
+
+.sidebar-settings {
+    margin-top: auto;
+}
+
+
+/* =========================================
+   NAV ITEM
+========================================= */
+
+.nav-item {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+
+    width: 100%;
+
+    padding: 14px 18px;
+
+    border-radius: 28px;
+
+    color: #4f566b;
+
+    text-decoration: none;
+
+    font-size: 16px;
+
+    cursor: pointer;
+
+    transition:
+        background 0.2s ease,
+        color 0.2s ease;
+}
+
+.nav-item span {
+    width: 20px;
+
+    display: inline-flex;
+    justify-content: center;
+
+    font-size: 17px;
+}
+
+.nav-item:hover {
+    background: #e5e7ff;
+
+    color: #155bd7;
+}
+
+.nav-item.active {
+    background: #2867e8;
+
+    color: white;
+
+    box-shadow: 0 7px 18px rgba(40, 103, 232, 0.25);
+}
+
+
+/* =========================================
+   MAIN CONTENT AREA
+========================================= */
+
+.dashboard-main {
+    margin-left: 250px;
+
+    width: calc(100% - 250px);
+
+    min-height: 100vh;
+
+    background: #f7f7ff;
+
+    overflow-x: hidden;
+}
+
+
+/* =========================================
+   TOP BAR
+========================================= */
+
+.topbar {
+    position: sticky;
+
+    top: 0;
+
+    z-index: 100;
+
+    width: 100%;
+
+    height: 76px;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 36px;
+
+    background: #fafaff;
+
+    border-bottom: 1px solid #e4e5ef;
+}
+
+
+/* =========================================
+   SEARCH
+========================================= */
+
+.search-box {
+    width: 480px;
+    max-width: 50%;
+
+    height: 44px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+
+    padding: 0 18px;
+
+    border-radius: 24px;
+
+    background: #f0f1fb;
+
+    color: #7b8195;
+}
+
+.search-box span {
+    font-size: 22px;
+}
+
+.search-box input {
+    width: 100%;
+
+    border: none;
+    outline: none;
+
+    background: transparent;
+
+    font-size: 16px;
+
+    color: #202638;
+}
+
+.search-box input::placeholder {
+    color: #7d8293;
+}
+
+
+/* =========================================
+   TEACHER PROFILE
+========================================= */
+
+.teacher-profile {
+    display: flex;
+    align-items: center;
+
+    gap: 16px;
+}
+
+.notification {
+    position: relative;
+
+    font-size: 22px;
+
+    padding-right: 18px;
+
+    border-right: 1px solid #dedfea;
+}
+
+.notification span {
+    position: absolute;
+
+    top: 0;
+    right: 13px;
+
+    width: 7px;
+    height: 7px;
+
+    border-radius: 50%;
+
+    background: #dc2626;
+}
+
+.profile-info {
+    display: flex;
+    flex-direction: column;
+
+    text-align: right;
+}
+
+.profile-info strong {
+    font-size: 14px;
+
+    color: #111827;
+}
+
+.profile-info small {
+    margin-top: 3px;
+
+    font-size: 10px;
+
+    letter-spacing: 1px;
+
+    color: #7b8195;
+}
+
+.profile-avatar {
+    width: 42px;
+    height: 42px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 50%;
+
+    border: 2px solid #2768e8;
+
+    background: #eef3ff;
+
+    color: #155bd7;
+
+    font-weight: 700;
+}
+
+
+/* =========================================
+   DASHBOARD CONTENT
+========================================= */
+
+.dashboard-content {
+    width: 100%;
+
+    max-width: 1500px;
+
+    margin: 0 auto;
+
+    padding: 40px;
+}
+
+
+/* =========================================
+   ACTION CARDS
+========================================= */
+
+.action-grid {
+    display: grid;
+
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+
+    gap: 28px;
+
+    width: 100%;
+
+    margin-bottom: 40px;
+}
+
+.action-card {
+    min-height: 150px;
+
+    display: flex;
+    align-items: center;
+
+    gap: 20px;
+
+    padding: 28px;
+
+    border: 1px solid #e2e4f0;
+
+    border-radius: 24px;
+
+    background: white;
+
+    cursor: pointer;
+
+    text-align: left;
+
+    transition:
+        transform 0.2s ease,
+        box-shadow 0.2s ease;
+}
+
+.action-card:hover {
+    transform: translateY(-2px);
+
+    box-shadow: 0 10px 30px rgba(30, 50, 100, 0.08);
+}
+
+.action-icon {
+    width: 52px;
+    height: 52px;
+
+    flex-shrink: 0;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    border-radius: 16px;
+
+    background: #edf3ff;
+
+    color: #1762df;
+
+    font-size: 25px;
+}
+
+.action-icon.purple {
+    background: #f1eaff;
+
+    color: #7c3aed;
+}
+
+.action-card h2 {
+    margin: 0 0 7px;
+
+    font-size: 21px;
+
+    color: #111827;
+}
+
+.action-card p {
+    margin: 0;
+
+    color: #747b91;
+
+    font-size: 14px;
+}
+
+
+/* =========================================
+   STATISTICS
+========================================= */
+
+.stats-grid {
+    display: grid;
+
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+
+    gap: 28px;
+
+    width: 100%;
+
+    margin-bottom: 40px;
+}
+
+.stat-card {
+    min-height: 130px;
+
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+
+    padding: 25px;
+
+    border: 1px solid #e2e4f0;
+
+    border-radius: 22px;
+
+    background: white;
+}
+
+.stat-card span {
+    margin-bottom: 12px;
+
+    color: #747b91;
+
+    font-size: 13px;
+
+    letter-spacing: 1.5px;
+}
+
+.stat-card strong {
+    color: #111827;
+
+    font-size: 38px;
+
+    line-height: 1;
+}
+
+
+/* =========================================
+   ACTIVITY AREA
+========================================= */
+
+.activity-grid {
+    display: grid;
+
+    grid-template-columns: minmax(0, 1.7fr) minmax(300px, 1fr);
+
+    gap: 28px;
+
+    width: 100%;
+}
+
+.activity-card,
+.recent-card {
+    min-width: 0;
+
+    min-height: 330px;
+
+    padding: 28px;
+
+    border: 1px solid #e2e4f0;
+
+    border-radius: 24px;
+
+    background: white;
+}
+
+.activity-card h3,
+.recent-card h3 {
+    margin: 0 0 28px;
+
+    font-size: 18px;
+
+    color: #111827;
+}
+
+
+/* =========================================
+   CHART
+========================================= */
+
+.chart {
+    height: 190px;
+
+    display: flex;
+    align-items: center;
+
+    padding: 20px;
+
+    border-radius: 15px;
+
+    background: #fafaff;
+
+    overflow: hidden;
+}
+
+.chart-line {
+    color: #2867e8;
+
+    font-size: 20px;
+
+    line-height: 2;
+
+    white-space: nowrap;
+}
+
+.chart-labels {
+    display: flex;
+
+    justify-content: space-between;
+
+    padding: 12px 20px 0;
+
+    color: #8a90a1;
+
+    font-size: 12px;
+}
+
+
+/* =========================================
+   RECENT ACTIVITY
+========================================= */
+
+.recent-item {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 17px 0;
+
+    border-bottom: 1px solid #ececf3;
+}
+
+.recent-item:last-child {
+    border-bottom: none;
+}
+
+.recent-item div {
+    display: flex;
+    flex-direction: column;
+
+    gap: 5px;
+}
+
+.recent-item strong {
+    color: #172033;
+
+    font-size: 14px;
+}
+
+.recent-item small {
+    color: #858b9e;
+
+    font-size: 12px;
+}
+
+.recent-item b {
+    color: #155bd7;
+
+    font-size: 15px;
+}
+
+.recent-item b.live {
+    color: #7c3aed;
+}
+
+.recent-item b.low {
+    color: #dc2626;
+}
+
+
+/* =========================================
+   RESPONSIVE
+========================================= */
+
+@media (max-width: 1100px) {
+
+    .sidebar {
+        width: 220px;
+    }
+
+    .dashboard-main {
+        margin-left: 220px;
+
+        width: calc(100% - 220px);
+    }
+
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .activity-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+
+@media (max-width: 800px) {
+
+    .sidebar {
+        width: 200px;
+    }
+
+    .dashboard-main {
+        margin-left: 200px;
+
+        width: calc(100% - 200px);
+    }
+
+    .dashboard-content {
+        padding: 25px;
+    }
+
+    .action-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr 1fr;
+    }
+
+    .search-box {
+        width: 300px;
+    }
+}
+
+
+@media (max-width: 600px) {
+
+    .sidebar {
+        width: 75px;
+
+        padding: 20px 10px;
+    }
+
+    .sidebar-logo span,
+    .nav-item:not(.active)::after,
+    .nav-item {
+        font-size: 0;
+    }
+
+    .sidebar-logo {
+        justify-content: center;
+
+        padding: 0;
+    }
+
+    .nav-item {
+        justify-content: center;
+
+        padding: 14px;
+    }
+
+    .nav-item span {
+        font-size: 18px;
+    }
+
+    .dashboard-main {
+        margin-left: 75px;
+
+        width: calc(100% - 75px);
+    }
+
+    .topbar {
+        padding: 0 18px;
+    }
+
+    .search-box {
+        max-width: 55%;
+    }
+
+    .profile-info {
+        display: none;
+    }
+
+    .dashboard-content {
+        padding: 20px;
+    }
+
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
