@@ -11,6 +11,7 @@ import Register from "./pages/Auth/register";
 import Dashboard from "./pages/Teacher/Dashboard";
 import MyQuizzes from "./pages/Teacher/MyQuizzes";
 import CreateQuiz from "./pages/Teacher/CreateQuiz";
+import StudentDashboard from "./pages/Student/StudentDashboard";
 
 function App() {
     return (
@@ -67,6 +68,11 @@ function App() {
                             replace
                         />
                     }
+                />
+
+                <Route
+                    path="/student/dashboard"
+                    element={<StudentDashboard />}
                 />
 
             </Routes>
