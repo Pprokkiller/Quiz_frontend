@@ -5,35 +5,55 @@ import { useAuth } from "../../context/authContext";
 import { createQuiz } from "../../services/quizService";
 import { createQuestion } from "../../services/questionService";
 import { createOption } from "../../services/optionService";
+import api from "../../services/api";
 
 import "./CreateQuiz.css";
 
+
 function CreateQuiz() {
+
     const navigate = useNavigate();
     const { user } = useAuth();
+
 
     // =========================
     // Quiz Information
     // =========================
 
-    const [quizTitle, setQuizTitle] = useState("Untitled Quiz");
-    const [subject, setSubject] = useState("History");
-    const [difficulty, setDifficulty] = useState("Medium");
-    const [totalMarks, setTotalMarks] = useState(10);
-    const [description, setDescription] = useState("");
+    const [quizTitle, setQuizTitle] =
+        useState("Untitled Quiz");
+
+    const [subject, setSubject] =
+        useState("History");
+
+    const [difficulty, setDifficulty] =
+        useState("Medium");
+
+    const [totalMarks, setTotalMarks] =
+        useState(10);
+
+    const [description, setDescription] =
+        useState("");
+
 
     // =========================
     // Quiz Settings
     // =========================
 
-    const [shuffleQuestions, setShuffleQuestions] = useState(false);
-    const [showFeedback, setShowFeedback] = useState(true);
+    const [shuffleQuestions, setShuffleQuestions] =
+        useState(false);
+
+    const [showFeedback, setShowFeedback] =
+        useState(true);
+
 
     // =========================
     // Publishing
     // =========================
 
-    const [publishing, setPublishing] = useState(false);
+    const [publishing, setPublishing] =
+        useState(false);
+
 
     // =========================
     // Questions
@@ -42,8 +62,11 @@ function CreateQuiz() {
     const [questions, setQuestions] = useState([
         {
             id: 1,
+
             text: "",
+
             type: "MCQ",
+
             points: 1,
 
             options: [
@@ -52,16 +75,19 @@ function CreateQuiz() {
                     text: "",
                     correct: true
                 },
+
                 {
                     id: 2,
                     text: "",
                     correct: false
                 },
+
                 {
                     id: 3,
                     text: "",
                     correct: false
                 },
+
                 {
                     id: 4,
                     text: "",
@@ -71,22 +97,32 @@ function CreateQuiz() {
         }
     ]);
 
+
     // =========================
     // Update Question
     // =========================
 
-    const updateQuestion = (questionId, value) => {
-        setQuestions((currentQuestions) =>
-            currentQuestions.map((question) =>
-                question.id === questionId
-                    ? {
-                          ...question,
-                          text: value
-                      }
-                    : question
-            )
+    const updateQuestion = (
+        questionId,
+        value
+    ) => {
+
+        setQuestions(
+            (currentQuestions) =>
+
+                currentQuestions.map(
+                    (question) =>
+
+                        question.id === questionId
+                            ? {
+                                ...question,
+                                text: value
+                            }
+                            : question
+                )
         );
     };
+
 
     // =========================
     // Update Option
@@ -97,28 +133,40 @@ function CreateQuiz() {
         optionId,
         value
     ) => {
-        setQuestions((currentQuestions) =>
-            currentQuestions.map((question) => {
-                if (question.id !== questionId) {
-                    return question;
-                }
 
-                return {
-                    ...question,
+        setQuestions(
+            (currentQuestions) =>
 
-                    options: question.options.map(
-                        (option) =>
-                            option.id === optionId
-                                ? {
-                                      ...option,
-                                      text: value
-                                  }
-                                : option
-                    )
-                };
-            })
+                currentQuestions.map(
+                    (question) => {
+
+                        if (
+                            question.id !== questionId
+                        ) {
+                            return question;
+                        }
+
+
+                        return {
+                            ...question,
+
+                            options:
+                                question.options.map(
+                                    (option) =>
+
+                                        option.id === optionId
+                                            ? {
+                                                ...option,
+                                                text: value
+                                            }
+                                            : option
+                                )
+                        };
+                    }
+                )
         );
     };
+
 
     // =========================
     // Select Correct Option
@@ -128,54 +176,78 @@ function CreateQuiz() {
         questionId,
         optionId
     ) => {
-        setQuestions((currentQuestions) =>
-            currentQuestions.map((question) => {
-                if (question.id !== questionId) {
-                    return question;
-                }
 
-                return {
-                    ...question,
+        setQuestions(
+            (currentQuestions) =>
 
-                    options: question.options.map(
-                        (option) => ({
-                            ...option,
-                            correct:
-                                option.id === optionId
-                        })
-                    )
-                };
-            })
+                currentQuestions.map(
+                    (question) => {
+
+                        if (
+                            question.id !== questionId
+                        ) {
+                            return question;
+                        }
+
+
+                        return {
+                            ...question,
+
+                            options:
+                                question.options.map(
+                                    (option) => ({
+                                        ...option,
+
+                                        correct:
+                                            option.id === optionId
+                                    })
+                                )
+                        };
+                    }
+                )
         );
     };
+
 
     // =========================
     // Add Option
     // =========================
 
     const addOption = (questionId) => {
-        setQuestions((currentQuestions) =>
-            currentQuestions.map((question) => {
-                if (question.id !== questionId) {
-                    return question;
-                }
 
-                return {
-                    ...question,
+        setQuestions(
+            (currentQuestions) =>
 
-                    options: [
-                        ...question.options,
+                currentQuestions.map(
+                    (question) => {
 
-                        {
-                            id: Date.now(),
-                            text: "",
-                            correct: false
+                        if (
+                            question.id !== questionId
+                        ) {
+                            return question;
                         }
-                    ]
-                };
-            })
+
+
+                        return {
+                            ...question,
+
+                            options: [
+                                ...question.options,
+
+                                {
+                                    id: Date.now(),
+
+                                    text: "",
+
+                                    correct: false
+                                }
+                            ]
+                        };
+                    }
+                )
         );
     };
+
 
     // =========================
     // Remove Option
@@ -185,162 +257,246 @@ function CreateQuiz() {
         questionId,
         optionId
     ) => {
-        setQuestions((currentQuestions) =>
-            currentQuestions.map((question) => {
-                if (question.id !== questionId) {
-                    return question;
-                }
 
-                // Keep at least 2 options
-                if (question.options.length <= 2) {
-                    return question;
-                }
+        setQuestions(
+            (currentQuestions) =>
 
-                return {
-                    ...question,
+                currentQuestions.map(
+                    (question) => {
 
-                    options: question.options.filter(
-                        (option) =>
-                            option.id !== optionId
-                    )
-                };
-            })
+                        if (
+                            question.id !== questionId
+                        ) {
+                            return question;
+                        }
+
+
+                        // Keep at least 2 options
+
+                        if (
+                            question.options.length <= 2
+                        ) {
+                            return question;
+                        }
+
+
+                        return {
+                            ...question,
+
+                            options:
+                                question.options.filter(
+                                    (option) =>
+                                        option.id !== optionId
+                                )
+                        };
+                    }
+                )
         );
     };
+
 
     // =========================
     // Add Question
     // =========================
 
     const addQuestion = () => {
+
         const id = Date.now();
 
+
         const newQuestion = {
+
             id,
+
             text: "",
 
-            // IMPORTANT:
-            // Database expects MCQ
+            // Database accepts:
+            // MCQ / TrueFalse
+
             type: "MCQ",
 
             points: 1,
 
             options: [
+
                 {
                     id: id + 1,
+
                     text: "",
+
                     correct: true
                 },
+
                 {
                     id: id + 2,
+
                     text: "",
+
                     correct: false
                 },
+
                 {
                     id: id + 3,
+
                     text: "",
+
                     correct: false
                 },
+
                 {
                     id: id + 4,
+
                     text: "",
+
                     correct: false
                 }
             ]
         };
 
-        setQuestions((currentQuestions) => [
-            ...currentQuestions,
-            newQuestion
-        ]);
+
+        setQuestions(
+            (currentQuestions) => [
+                ...currentQuestions,
+                newQuestion
+            ]
+        );
     };
+
 
     // =========================
     // Remove Question
     // =========================
 
-    const removeQuestion = (questionId) => {
+    const removeQuestion = (
+        questionId
+    ) => {
+
         if (questions.length <= 1) {
             return;
         }
 
-        setQuestions((currentQuestions) =>
-            currentQuestions.filter(
-                (question) =>
-                    question.id !== questionId
-            )
+
+        setQuestions(
+            (currentQuestions) =>
+
+                currentQuestions.filter(
+                    (question) =>
+                        question.id !== questionId
+                )
         );
     };
+
 
     // =========================
     // Publish Quiz
     // =========================
 
     const handlePublish = async () => {
+
         if (publishing) {
             return;
         }
 
-        // -------------------------
+
+        // =========================
         // Validate Quiz
-        // -------------------------
+        // =========================
 
         if (!quizTitle.trim()) {
-            alert("Please enter a quiz title.");
+
+            alert(
+                "Please enter a quiz title."
+            );
+
             return;
         }
+
 
         if (!subject.trim()) {
-            alert("Please enter a subject.");
+
+            alert(
+                "Please enter a subject."
+            );
+
             return;
         }
+
 
         if (questions.length === 0) {
-            alert("Please add at least one question.");
+
+            alert(
+                "Please add at least one question."
+            );
+
             return;
         }
 
-        // -------------------------
-        // Validate Questions
-        // -------------------------
 
-        for (let i = 0; i < questions.length; i++) {
-            const question = questions[i];
+        // =========================
+        // Validate Questions
+        // =========================
+
+        for (
+            let i = 0;
+            i < questions.length;
+            i++
+        ) {
+
+            const question =
+                questions[i];
+
 
             if (!question.text.trim()) {
+
                 alert(
-                    `Please enter Question ${i + 1}.`
+                    `Please enter Question ${
+                        i + 1
+                    }.`
                 );
+
                 return;
             }
+
 
             if (
                 !question.options ||
                 question.options.length < 2
             ) {
+
                 alert(
-                    `Question ${i + 1} must have at least 2 options.`
+                    `Question ${
+                        i + 1
+                    } must have at least 2 options.`
                 );
+
                 return;
             }
+
 
             for (
                 let j = 0;
                 j < question.options.length;
                 j++
             ) {
+
                 if (
                     !question.options[j].text.trim()
                 ) {
+
                     alert(
                         `Please fill in Option ${
-                            String.fromCharCode(65 + j)
-                        } for Question ${i + 1}.`
+                            String.fromCharCode(
+                                65 + j
+                            )
+                        } for Question ${
+                            i + 1
+                        }.`
                     );
 
                     return;
                 }
             }
+
 
             const hasCorrectAnswer =
                 question.options.some(
@@ -348,87 +504,106 @@ function CreateQuiz() {
                         option.correct === true
                 );
 
+
             if (!hasCorrectAnswer) {
+
                 alert(
-                    `Please select a correct answer for Question ${i + 1}.`
+                    `Please select a correct answer for Question ${
+                        i + 1
+                    }.`
                 );
+
                 return;
             }
         }
 
-        // -------------------------
+
+        // =========================
         // Start Publishing
-        // -------------------------
+        // =========================
 
         try {
+
             setPublishing(true);
 
-            console.log("Creating quiz...");
 
-            // =========================
+            console.log(
+                "Creating quiz..."
+            );
+
+
+            // =================================
             // STEP 1
-            // Create Quiz
-            // =========================
+            // CREATE QUIZ
+            // =================================
 
-            const quizResponse = await createQuiz({
-                title: quizTitle.trim(),
+            const quizResponse =
+                await createQuiz({
 
-                description:
-                    description.trim(),
+                    title:
+                        quizTitle.trim(),
 
-                subject:
-                    subject.trim(),
+                    description:
+                        description.trim(),
 
-                difficulty,
+                    subject:
+                        subject.trim(),
 
-                // Database accepts Practice / Live
-                quiz_type: "Practice",
+                    difficulty,
 
-                total_marks:
-                    Number(totalMarks)
-            });
+                    quiz_type:
+                        "Practice",
+
+                    total_marks:
+                        Number(totalMarks)
+
+                });
+
 
             console.log(
                 "Quiz response:",
                 quizResponse
             );
 
+
             const createdQuiz =
                 quizResponse.data;
 
+
             const quizId =
                 createdQuiz.quiz_id;
+
 
             console.log(
                 "Created Quiz ID:",
                 quizId
             );
 
-            // =========================
+
+            // =================================
             // STEP 2
-            // Create Questions
-            // =========================
+            // CREATE QUESTIONS
+            // =================================
 
             for (
                 const question of questions
             ) {
+
                 console.log(
                     "Creating question:",
                     question.text
                 );
 
+
                 const questionResponse =
                     await createQuestion({
+
                         quiz_id:
                             quizId,
 
                         question_text:
                             question.text.trim(),
 
-                        // IMPORTANT
-                        // Database accepts:
-                        // MCQ
-                        // TrueFalse
                         question_type:
                             question.type,
 
@@ -441,31 +616,38 @@ function CreateQuiz() {
                             ""
                     });
 
+
                 console.log(
                     "Question response:",
                     questionResponse
                 );
 
+
                 const createdQuestion =
                     questionResponse.data;
+
 
                 const questionId =
                     createdQuestion.question_id;
 
-                // =========================
+
+                // =================================
                 // STEP 3
-                // Create Options
-                // =========================
+                // CREATE OPTIONS
+                // =================================
 
                 for (
                     const option of question.options
                 ) {
+
                     console.log(
                         "Creating option:",
                         option.text
                     );
 
+
                     await createOption({
+
                         question_id:
                             questionId,
 
@@ -474,32 +656,96 @@ function CreateQuiz() {
 
                         is_correct:
                             option.correct === true
+
                     });
                 }
             }
 
-            // =========================
-            // SUCCESS
-            // =========================
 
-            alert(
-                "Quiz published successfully!"
+            // =================================
+            // STEP 4
+            // CREATE LIVE SESSION
+            // =================================
+
+            console.log(
+                "Creating live session..."
             );
+
+
+            const sessionResponse =
+                await api.post(
+                    "/session/create",
+                    {
+                        quiz_id:
+                            quizId
+                    }
+                );
+
+
+            console.log(
+                "Session response:",
+                sessionResponse
+            );
+
+
+            const session =
+                sessionResponse.data.data;
+
+
+            if (
+                !session ||
+                !session.session_id ||
+                !session.join_code
+            ) {
+
+                throw new Error(
+                    "Live session was created but no join code was returned."
+                );
+            }
+
+
+            console.log(
+                "Live session created:",
+                session
+            );
+
+
+            // =================================
+            // STEP 5
+            // GO TO JOIN CODE SCREEN
+            // =================================
 
             navigate(
-                "/teacher/quizzes"
+                "/teacher/live-session",
+                {
+                    state: {
+
+                        sessionId:
+                            session.session_id,
+
+                        quizId:
+                            quizId,
+
+                        joinCode:
+                            session.join_code
+                    }
+                }
             );
 
+
         } catch (error) {
+
             console.error(
                 "Publish quiz error:",
                 error
             );
 
+
             console.error(
                 "Response:",
                 error.response?.data
             );
+
 
             const message =
                 error.response?.data?.message ||
@@ -507,21 +753,33 @@ function CreateQuiz() {
                 error.message ||
                 "Failed to publish quiz.";
 
+
             alert(message);
 
+
         } finally {
+
             setPublishing(false);
+
         }
     };
 
+
+    // =========================
+    // Render
+    // =========================
+
     return (
+
         <div className="create-quiz-page">
+
 
             {/* =================================
                 SIDEBAR
             ================================= */}
 
             <aside className="sidebar">
+
 
                 <div className="sidebar-logo">
 
@@ -535,75 +793,115 @@ function CreateQuiz() {
 
                 </div>
 
+
                 <nav className="sidebar-nav">
+
 
                     <button
                         className="nav-item"
+
                         onClick={() =>
                             navigate(
                                 "/teacher/dashboard"
                             )
                         }
                     >
-                        <span>▦</span>
+
+                        <span>
+                            ▦
+                        </span>
+
                         Dashboard
+
                     </button>
+
 
                     <button
                         className="nav-item active"
+
                         onClick={() =>
                             navigate(
                                 "/teacher/quizzes"
                             )
                         }
                     >
-                        <span>☑</span>
+
+                        <span>
+                            ☑
+                        </span>
+
                         My Quizzes
+
                     </button>
+
 
                     <button
                         className="nav-item"
+
                         onClick={() =>
                             navigate(
                                 "/teacher/live-sessions"
                             )
                         }
                     >
-                        <span>◉</span>
+
+                        <span>
+                            ◉
+                        </span>
+
                         Live Sessions
+
                     </button>
+
 
                     <button
                         className="nav-item"
+
                         onClick={() =>
                             navigate(
                                 "/teacher/ai-generator"
                             )
                         }
                     >
-                        <span>✦</span>
+
+                        <span>
+                            ✦
+                        </span>
+
                         AI Generator
+
                     </button>
+
 
                 </nav>
 
+
                 <div className="sidebar-settings">
+
 
                     <button
                         className="nav-item"
+
                         onClick={() =>
                             navigate(
                                 "/teacher/settings"
                             )
                         }
                     >
-                        <span>⚙</span>
+
+                        <span>
+                            ⚙
+                        </span>
+
                         Settings
+
                     </button>
+
 
                 </div>
 
             </aside>
+
 
             {/* =================================
                 MAIN CONTENT
@@ -611,11 +909,13 @@ function CreateQuiz() {
 
             <main className="create-quiz-main">
 
+
                 {/* =================================
                     TOP BAR
                 ================================= */}
 
                 <header className="topbar">
+
 
                     <div className="search-box">
 
@@ -630,25 +930,35 @@ function CreateQuiz() {
 
                     </div>
 
+
                     <div className="teacher-profile">
 
+
                         <div className="notification">
+
                             ♧
+
                             <span></span>
+
                         </div>
+
 
                         <div className="profile-info">
 
                             <strong>
+
                                 {user?.full_name ||
                                     "Teacher"}
+
                             </strong>
+
 
                             <small>
                                 TEACHER VIEW
                             </small>
 
                         </div>
+
 
                         <div className="profile-avatar">
 
@@ -659,9 +969,11 @@ function CreateQuiz() {
 
                         </div>
 
+
                     </div>
 
                 </header>
+
 
                 {/* =================================
                     EDITOR HEADER
@@ -669,22 +981,30 @@ function CreateQuiz() {
 
                 <div className="editor-header">
 
+
                     <div>
+
 
                         <button
                             className="back-button"
+
                             onClick={() =>
                                 navigate(
                                     "/teacher/quizzes"
                                 )
                             }
                         >
+
                             ← Back to Quizzes
+
                         </button>
+
 
                         <input
                             className="quiz-title-input"
+
                             value={quizTitle}
+
                             onChange={(event) =>
                                 setQuizTitle(
                                     event.target.value
@@ -692,39 +1012,57 @@ function CreateQuiz() {
                             }
                         />
 
+
                         <p>
                             Build your quiz and add
                             questions below.
                         </p>
 
+
                     </div>
+
 
                     <div className="editor-actions">
 
+
                         <button
                             className="preview-button"
+
                             onClick={() =>
                                 alert(
                                     "Preview will be added later."
                                 )
                             }
                         >
+
                             Preview
+
                         </button>
+
 
                         <button
                             className="publish-button"
-                            onClick={handlePublish}
-                            disabled={publishing}
+
+                            onClick={
+                                handlePublish
+                            }
+
+                            disabled={
+                                publishing
+                            }
                         >
+
                             {publishing
                                 ? "Publishing..."
                                 : "Publish"}
+
                         </button>
+
 
                     </div>
 
                 </div>
+
 
                 {/* =================================
                     EDITOR LAYOUT
@@ -732,11 +1070,13 @@ function CreateQuiz() {
 
                 <div className="editor-layout">
 
+
                     {/* =================================
                         QUESTIONS
                     ================================= */}
 
                     <section className="questions-section">
+
 
                         {questions.map(
                             (
@@ -751,38 +1091,54 @@ function CreateQuiz() {
                                     }
                                 >
 
+
                                     <div className="question-header">
 
+
                                         <div className="question-number">
+
                                             {
                                                 questionIndex +
                                                 1
                                             }
+
                                         </div>
+
 
                                         <span>
                                             Question
                                         </span>
 
+
                                         <button
+                                            type="button"
+
                                             className="remove-question"
+
                                             onClick={() =>
                                                 removeQuestion(
                                                     question.id
                                                 )
                                             }
                                         >
+
                                             🗑
+
                                         </button>
+
 
                                     </div>
 
+
                                     <textarea
                                         className="question-input"
+
                                         placeholder="Write your question here..."
+
                                         value={
                                             question.text
                                         }
+
                                         onChange={(event) =>
                                             updateQuestion(
                                                 question.id,
@@ -791,39 +1147,46 @@ function CreateQuiz() {
                                         }
                                     />
 
+
                                     {/* Question Type */}
 
                                     <div className="question-type-row">
+
 
                                         <label>
                                             Question Type
                                         </label>
 
+
                                         <select
                                             value={
                                                 question.type
                                             }
+
                                             onChange={(event) => {
 
                                                 const newType =
-                                                    event
-                                                        .target
-                                                        .value;
+                                                    event.target.value;
+
 
                                                 setQuestions(
                                                     (
                                                         currentQuestions
                                                     ) =>
+
                                                         currentQuestions.map(
                                                             (
                                                                 item
                                                             ) =>
+
                                                                 item.id ===
                                                                 question.id
+
                                                                     ? {
-                                                                          ...item,
-                                                                          type: newType
-                                                                      }
+                                                                        ...item,
+                                                                        type: newType
+                                                                    }
+
                                                                     : item
                                                         )
                                                 );
@@ -831,17 +1194,10 @@ function CreateQuiz() {
                                             }}
                                         >
 
-                                            {/* IMPORTANT:
-                                                value must be MCQ
-                                            */}
-
                                             <option value="MCQ">
                                                 Multiple Choice
                                             </option>
 
-                                            {/* IMPORTANT:
-                                                value must be TrueFalse
-                                            */}
 
                                             <option value="TrueFalse">
                                                 True / False
@@ -851,13 +1207,16 @@ function CreateQuiz() {
 
                                     </div>
 
+
                                     {/* Options */}
 
                                     <div className="options-section">
 
+
                                         <div className="options-title">
                                             Answer Options
                                         </div>
+
 
                                         {question.options.map(
                                             (
@@ -867,18 +1226,22 @@ function CreateQuiz() {
 
                                                 <div
                                                     className="option-row"
+
                                                     key={
                                                         option.id
                                                     }
                                                 >
 
+
                                                     <button
                                                         type="button"
+
                                                         className={`correct-selector ${
                                                             option.correct
                                                                 ? "selected"
                                                                 : ""
                                                         }`}
+
                                                         onClick={() =>
                                                             selectCorrectOption(
                                                                 question.id,
@@ -886,10 +1249,13 @@ function CreateQuiz() {
                                                             )
                                                         }
                                                     >
+
                                                         {option.correct
                                                             ? "✓"
                                                             : ""}
+
                                                     </button>
+
 
                                                     <span className="option-letter">
 
@@ -900,29 +1266,34 @@ function CreateQuiz() {
 
                                                     </span>
 
+
                                                     <input
                                                         type="text"
+
                                                         placeholder={`Option ${
                                                             optionIndex +
                                                             1
                                                         }`}
+
                                                         value={
                                                             option.text
                                                         }
+
                                                         onChange={(event) =>
                                                             updateOption(
                                                                 question.id,
                                                                 option.id,
-                                                                event
-                                                                    .target
-                                                                    .value
+                                                                event.target.value
                                                             )
                                                         }
                                                     />
 
+
                                                     <button
                                                         type="button"
+
                                                         className="remove-option"
+
                                                         onClick={() =>
                                                             removeOption(
                                                                 question.id,
@@ -930,86 +1301,118 @@ function CreateQuiz() {
                                                             )
                                                         }
                                                     >
+
                                                         ×
+
                                                     </button>
+
 
                                                 </div>
 
                                             )
                                         )}
 
+
                                         <button
                                             type="button"
+
                                             className="add-option-button"
+
                                             onClick={() =>
                                                 addOption(
                                                     question.id
                                                 )
                                             }
                                         >
+
                                             + Add Option
+
                                         </button>
 
+
                                     </div>
+
 
                                     {/* Points */}
 
                                     <div className="question-footer">
 
+
                                         <label>
                                             Points
                                         </label>
 
+
                                         <input
                                             type="number"
+
                                             min="1"
+
                                             value={
                                                 question.points
                                             }
+
                                             onChange={(event) =>
+
                                                 setQuestions(
                                                     (
                                                         currentQuestions
                                                     ) =>
+
                                                         currentQuestions.map(
                                                             (
                                                                 item
                                                             ) =>
+
                                                                 item.id ===
                                                                 question.id
+
                                                                     ? {
-                                                                          ...item,
-                                                                          points:
-                                                                              Number(
-                                                                                  event
-                                                                                      .target
-                                                                                      .value
-                                                                              )
-                                                                      }
+                                                                        ...item,
+
+                                                                        points:
+                                                                            Number(
+                                                                                event
+                                                                                    .target
+                                                                                    .value
+                                                                            )
+                                                                    }
+
                                                                     : item
                                                         )
                                                 )
                                             }
                                         />
 
+
                                     </div>
+
 
                                 </div>
 
                             )
                         )}
 
+
                         {/* Add Question */}
 
                         <button
                             type="button"
+
                             className="add-question-button"
-                            onClick={addQuestion}
+
+                            onClick={
+                                addQuestion
+                            }
                         >
+
                             + Add New Question
+
                         </button>
 
+
                     </section>
+
 
                     {/* =================================
                         QUIZ SETTINGS
@@ -1017,9 +1420,11 @@ function CreateQuiz() {
 
                     <aside className="quiz-settings">
 
+
                         <h2>
                             Quiz Settings
                         </h2>
+
 
                         {/* Subject */}
 
@@ -1029,9 +1434,14 @@ function CreateQuiz() {
                                 Subject
                             </label>
 
+
                             <input
                                 type="text"
-                                value={subject}
+
+                                value={
+                                    subject
+                                }
+
                                 onChange={(event) =>
                                     setSubject(
                                         event.target.value
@@ -1041,6 +1451,7 @@ function CreateQuiz() {
 
                         </div>
 
+
                         {/* Difficulty */}
 
                         <div className="setting-group">
@@ -1048,6 +1459,7 @@ function CreateQuiz() {
                             <label>
                                 Difficulty
                             </label>
+
 
                             <div className="difficulty-buttons">
 
@@ -1060,20 +1472,27 @@ function CreateQuiz() {
 
                                         <button
                                             type="button"
-                                            key={level}
+
+                                            key={
+                                                level
+                                            }
+
                                             className={
                                                 difficulty ===
                                                 level
                                                     ? "selected"
                                                     : ""
                                             }
+
                                             onClick={() =>
                                                 setDifficulty(
                                                     level
                                                 )
                                             }
                                         >
+
                                             {level}
+
                                         </button>
 
                                     )
@@ -1083,6 +1502,7 @@ function CreateQuiz() {
 
                         </div>
 
+
                         {/* Total Points */}
 
                         <div className="setting-group">
@@ -1091,12 +1511,16 @@ function CreateQuiz() {
                                 Total Points
                             </label>
 
+
                             <input
                                 type="number"
+
                                 min="1"
+
                                 value={
                                     totalMarks
                                 }
+
                                 onChange={(event) =>
                                     setTotalMarks(
                                         event.target.value
@@ -1106,6 +1530,7 @@ function CreateQuiz() {
 
                         </div>
 
+
                         {/* Description */}
 
                         <div className="setting-group">
@@ -1114,11 +1539,14 @@ function CreateQuiz() {
                                 Description
                             </label>
 
+
                             <textarea
                                 placeholder="Describe your quiz..."
+
                                 value={
                                     description
                                 }
+
                                 onChange={(event) =>
                                     setDescription(
                                         event.target.value
@@ -1128,11 +1556,14 @@ function CreateQuiz() {
 
                         </div>
 
+
                         <div className="settings-divider"></div>
+
 
                         <h3>
                             Options
                         </h3>
+
 
                         {/* Shuffle */}
 
@@ -1142,11 +1573,14 @@ function CreateQuiz() {
                                 Shuffle Questions
                             </span>
 
+
                             <input
                                 type="checkbox"
+
                                 checked={
                                     shuffleQuestions
                                 }
+
                                 onChange={(event) =>
                                     setShuffleQuestions(
                                         event.target.checked
@@ -1156,6 +1590,7 @@ function CreateQuiz() {
 
                         </label>
 
+
                         {/* Feedback */}
 
                         <label className="toggle-row">
@@ -1164,11 +1599,14 @@ function CreateQuiz() {
                                 Show Feedback
                             </span>
 
+
                             <input
                                 type="checkbox"
+
                                 checked={
                                     showFeedback
                                 }
+
                                 onChange={(event) =>
                                     setShowFeedback(
                                         event.target.checked
@@ -1178,28 +1616,37 @@ function CreateQuiz() {
 
                         </label>
 
+
                         {/* AI */}
 
                         <button
                             type="button"
+
                             className="ai-button"
+
                             onClick={() =>
                                 alert(
                                     "AI Assist will be connected later."
                                 )
                             }
                         >
+
                             ✦ AI Assist
+
                         </button>
+
 
                     </aside>
 
+
                 </div>
+
 
             </main>
 
         </div>
     );
 }
+
 
 export default CreateQuiz;

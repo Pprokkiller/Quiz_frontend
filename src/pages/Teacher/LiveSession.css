@@ -1,0 +1,578 @@
+.live-session-page {
+    min-height: 100vh;
+    background: #f7f8ff;
+    color: #10182f;
+}
+
+
+/* =========================
+   TOP BAR
+========================= */
+
+.live-topbar {
+    height: 72px;
+
+    background: white;
+
+    border-bottom: 1px solid #e5e8f2;
+
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+
+    padding: 0 45px;
+
+    box-sizing: border-box;
+}
+
+
+.live-logo {
+    display: flex;
+    align-items: center;
+
+    gap: 10px;
+
+    color: #145be7;
+
+    font-size: 23px;
+    font-weight: 700;
+
+    cursor: pointer;
+}
+
+
+.live-logo-mark {
+    width: 38px;
+    height: 38px;
+
+    background: #145be7;
+
+    color: white;
+
+    border-radius: 10px;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+
+.teacher-info {
+    display: flex;
+    align-items: center;
+
+    gap: 12px;
+}
+
+
+.teacher-info small {
+    display: block;
+
+    color: #8a92a5;
+
+    font-size: 10px;
+
+    letter-spacing: 0.8px;
+
+    margin-top: 2px;
+}
+
+
+.teacher-avatar {
+    width: 42px;
+    height: 42px;
+
+    border-radius: 50%;
+
+    border: 2px solid #2563eb;
+
+    color: #2563eb;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-weight: 600;
+}
+
+
+/* =========================
+   MAIN
+========================= */
+
+.live-session-main {
+    max-width: 1100px;
+
+    margin: auto;
+
+    padding: 45px 30px;
+}
+
+
+.back-button {
+    border: none;
+
+    background: transparent;
+
+    color: #2165e8;
+
+    font-size: 14px;
+
+    cursor: pointer;
+
+    padding: 0;
+
+    margin-bottom: 25px;
+}
+
+
+.back-button:hover {
+    text-decoration: underline;
+}
+
+
+/* =========================
+   HEADER
+========================= */
+
+.live-header {
+    display: flex;
+
+    align-items: center;
+    justify-content: space-between;
+
+    margin-bottom: 35px;
+}
+
+
+.live-label {
+    color: #2165e8;
+
+    font-size: 12px;
+
+    font-weight: 700;
+
+    letter-spacing: 1.5px;
+}
+
+
+.live-header h1 {
+    font-size: 38px;
+
+    margin: 7px 0;
+
+    color: #10182f;
+}
+
+
+.live-header p {
+    margin: 0;
+
+    color: #69738c;
+
+    font-size: 16px;
+}
+
+
+.session-status {
+    display: flex;
+
+    align-items: center;
+
+    gap: 8px;
+
+    padding: 10px 18px;
+
+    border-radius: 30px;
+
+    background: #fff3dc;
+
+    color: #b77900;
+
+    font-weight: 600;
+
+    font-size: 14px;
+}
+
+
+.session-status span {
+    width: 8px;
+    height: 8px;
+
+    border-radius: 50%;
+
+    background: #f5a900;
+}
+
+
+.session-status.live {
+    background: #e8f8ef;
+
+    color: #16834b;
+}
+
+
+.session-status.live span {
+    background: #20a464;
+}
+
+
+.session-status.ended {
+    background: #eeeeee;
+
+    color: #666;
+}
+
+
+.session-status.ended span {
+    background: #777;
+}
+
+
+/* =========================
+   ERROR
+========================= */
+
+.live-error {
+    background: #fff0f0;
+
+    color: #c62828;
+
+    border: 1px solid #ffd0d0;
+
+    padding: 14px 18px;
+
+    border-radius: 10px;
+
+    margin-bottom: 25px;
+}
+
+
+/* =========================
+   CONTENT
+========================= */
+
+.live-content {
+    display: grid;
+
+    grid-template-columns: 1.5fr 1fr;
+
+    gap: 25px;
+}
+
+
+.join-code-card,
+.session-info-card {
+    background: white;
+
+    border: 1px solid #e3e6f2;
+
+    border-radius: 20px;
+
+    padding: 35px;
+
+    box-shadow: 0 10px 35px rgba(30, 50, 100, 0.05);
+}
+
+
+/* =========================
+   JOIN CODE
+========================= */
+
+.join-code-card {
+    text-align: center;
+}
+
+
+.card-icon {
+    width: 58px;
+    height: 58px;
+
+    margin: auto;
+
+    border-radius: 16px;
+
+    background: #eef3ff;
+
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+    font-size: 25px;
+}
+
+
+.join-code-card h2 {
+    margin: 20px 0 7px;
+
+    font-size: 22px;
+}
+
+
+.join-code-card p {
+    margin: 0;
+
+    color: #69738c;
+}
+
+
+.join-code {
+    margin: 30px 0;
+
+    font-size: 58px;
+
+    font-weight: 800;
+
+    letter-spacing: 12px;
+
+    color: #145be7;
+}
+
+
+.copy-code-button {
+    width: 100%;
+
+    height: 52px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    background: #2165e8;
+
+    color: white;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+
+    transition: 0.2s;
+}
+
+
+.copy-code-button:hover {
+    background: #1454cc;
+
+    transform: translateY(-1px);
+}
+
+
+.share-message {
+    margin-top: 20px;
+
+    color: #7b8498;
+
+    font-size: 13px;
+
+    display: flex;
+
+    align-items: center;
+    justify-content: center;
+
+    gap: 7px;
+}
+
+
+/* =========================
+   SESSION INFO
+========================= */
+
+.session-info-card h2 {
+    margin-top: 0;
+
+    font-size: 21px;
+
+    margin-bottom: 25px;
+}
+
+
+.info-row {
+    display: flex;
+
+    justify-content: space-between;
+
+    align-items: center;
+
+    padding: 18px 0;
+
+    border-bottom: 1px solid #edf0f6;
+}
+
+
+.info-row:last-child {
+    border-bottom: none;
+}
+
+
+.info-row span {
+    color: #788197;
+
+    font-size: 14px;
+}
+
+
+.info-row strong {
+    color: #17213c;
+}
+
+
+/* =========================
+   CONTROLS
+========================= */
+
+.session-controls {
+    display: flex;
+
+    justify-content: center;
+
+    margin-top: 30px;
+}
+
+
+.start-session-button,
+.end-session-button,
+.back-dashboard-button {
+    min-width: 220px;
+
+    height: 52px;
+
+    border: none;
+
+    border-radius: 11px;
+
+    font-size: 16px;
+
+    font-weight: 600;
+
+    cursor: pointer;
+}
+
+
+.start-session-button {
+    background: #2165e8;
+
+    color: white;
+}
+
+
+.start-session-button:hover {
+    background: #1454cc;
+}
+
+
+.end-session-button {
+    background: #ef4444;
+
+    color: white;
+}
+
+
+.end-session-button:hover {
+    background: #dc2626;
+}
+
+
+.back-dashboard-button {
+    background: #2165e8;
+
+    color: white;
+}
+
+
+button:disabled {
+    opacity: 0.6;
+
+    cursor: not-allowed;
+}
+
+
+/* =========================
+   LOADING
+========================= */
+
+.live-loading {
+    min-height: 100vh;
+
+    display: flex;
+
+    flex-direction: column;
+
+    align-items: center;
+    justify-content: center;
+
+    text-align: center;
+}
+
+
+.live-loading h2 {
+    margin-bottom: 5px;
+}
+
+
+.live-loading p {
+    color: #69738c;
+}
+
+
+.loading-spinner {
+    width: 42px;
+    height: 42px;
+
+    border: 4px solid #dfe6f5;
+
+    border-top-color: #2165e8;
+
+    border-radius: 50%;
+
+    animation: spin 0.8s linear infinite;
+
+    margin-bottom: 20px;
+}
+
+
+@keyframes spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
+
+
+/* =========================
+   MOBILE
+========================= */
+
+@media (max-width: 800px) {
+
+    .live-topbar {
+        padding: 0 20px;
+    }
+
+    .live-session-main {
+        padding: 30px 18px;
+    }
+
+    .live-header {
+        align-items: flex-start;
+
+        flex-direction: column;
+
+        gap: 20px;
+    }
+
+    .live-header h1 {
+        font-size: 30px;
+    }
+
+    .live-content {
+        grid-template-columns: 1fr;
+    }
+
+    .join-code {
+        font-size: 42px;
+
+        letter-spacing: 7px;
+    }
+
+}

@@ -2,36 +2,195 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 import { useAuth } from "../../context/authContext";
+import api from "../../services/api";
 
 import "./StudentDashboard.css";
 
+
 function StudentDashboard() {
+
     const navigate = useNavigate();
+
     const { user } = useAuth();
+
+
+    // ================================
+    // Join Code
+    // ================================
 
     const [joinCode, setJoinCode] = useState("");
 
-    const handleJoinSession = () => {
-        if (!joinCode.trim()) {
-            alert("Please enter a session code.");
+    const [joining, setJoining] = useState(false);
+
+
+    // ================================
+    // Join Live Session
+    // ================================
+
+    const handleJoinSession = async () => {
+
+        const code =
+            joinCode.trim().toUpperCase();
+
+
+        // Check empty
+
+        if (!code) {
+
+            alert(
+                "Please enter a session code."
+            );
+
             return;
         }
 
-        // Backend connection will be added later
-        console.log("Joining session:", joinCode);
 
-        // Later:
-        // navigate(`/student/join/${joinCode}`);
+        // Check length
+
+        if (code.length !== 6) {
+
+            alert(
+                "Please enter a valid 6-character session code."
+            );
+
+            return;
+        }
+
+
+        try {
+
+            setJoining(true);
+
+
+            console.log(
+                "Looking for session:",
+                code
+            );
+
+
+            // =================================
+            // Find session using join code
+            // =================================
+
+            const response =
+                await api.get(
+                    `/session/join/${code}`
+                );
+
+
+            console.log(
+                "Session response:",
+                response.data
+            );
+
+
+            const session =
+                response.data.data;
+
+
+            // =================================
+            // Check session
+            // =================================
+
+            if (!session) {
+
+                alert(
+                    "Session not found."
+                );
+
+                return;
+            }
+
+
+            // =================================
+            // Check if session ended
+            // =================================
+
+            if (
+                session.status ===
+                "Ended"
+            ) {
+
+                alert(
+                    "This quiz session has already ended."
+                );
+
+                return;
+            }
+
+
+            // =================================
+            // Session found
+            // =================================
+
+            console.log(
+                "Session found:",
+                session
+            );
+
+
+            // =================================
+            // Go to student quiz/session page
+            //
+            // Participants will be added later.
+            // =================================
+
+            navigate(
+                `/student/session/${session.session_id}`
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Failed to join session:",
+                error
+            );
+
+
+            if (
+                error.response?.status ===
+                404
+            ) {
+
+                alert(
+                    "Invalid session code. Please check the code and try again."
+                );
+
+            } else {
+
+                alert(
+                    error.response?.data?.message ||
+                    "Unable to join the session. Please try again."
+                );
+            }
+
+        } finally {
+
+            setJoining(false);
+
+        }
     };
 
+
+    // ================================
+    // Render
+    // ================================
+
     return (
+
         <div className="student-dashboard">
 
-            {/* ================= SIDEBAR ================= */}
+
+            {/* =================================
+                SIDEBAR
+            ================================= */}
 
             <aside className="student-sidebar">
 
+
                 {/* Logo */}
+
                 <div className="student-sidebar-logo">
 
                     <div className="student-logo-mark">
@@ -46,50 +205,93 @@ function StudentDashboard() {
 
 
                 {/* Navigation */}
+
                 <nav className="student-sidebar-nav">
+
+
+                    {/* Dashboard */}
 
                     <div
                         className="student-nav-item student-active"
+
                         onClick={() =>
-                            navigate("/student/dashboard")
+                            navigate(
+                                "/student/dashboard"
+                            )
                         }
                     >
-                        <span>▦</span>
+
+                        <span>
+                            ▦
+                        </span>
+
                         Dashboard
+
                     </div>
 
 
+                    {/* My Quizzes */}
+
                     <div
                         className="student-nav-item"
+
                         onClick={() =>
-                            navigate("/student/quizzes")
+                            navigate(
+                                "/student/quizzes"
+                            )
                         }
                     >
-                        <span>☑</span>
+
+                        <span>
+                            ☑
+                        </span>
+
                         My Quizzes
+
                     </div>
 
 
+                    {/* Live Sessions */}
+
                     <div
                         className="student-nav-item"
+
                         onClick={() =>
-                            navigate("/student/live-sessions")
+                            navigate(
+                                "/student/live-sessions"
+                            )
                         }
                     >
-                        <span>◉</span>
+
+                        <span>
+                            ◉
+                        </span>
+
                         Live Sessions
+
                     </div>
 
+
+                    {/* AI Generator */}
 
                     <div
                         className="student-nav-item"
+
                         onClick={() =>
-                            navigate("/student/ai-generator")
+                            navigate(
+                                "/student/ai-generator"
+                            )
                         }
                     >
-                        <span>✦</span>
+
+                        <span>
+                            ✦
+                        </span>
+
                         AI Generator
+
                     </div>
+
 
                 </nav>
 
@@ -100,27 +302,41 @@ function StudentDashboard() {
 
                     <div
                         className="student-nav-item"
+
                         onClick={() =>
-                            navigate("/student/settings")
+                            navigate(
+                                "/student/settings"
+                            )
                         }
                     >
-                        <span>⚙</span>
+
+                        <span>
+                            ⚙
+                        </span>
+
                         Settings
+
                     </div>
 
                 </div>
 
+
             </aside>
 
 
-            {/* ================= MAIN ================= */}
+            {/* =================================
+                MAIN
+            ================================= */}
 
             <main className="student-main">
 
 
-                {/* ================= TOP BAR ================= */}
+                {/* =================================
+                    TOP BAR
+                ================================= */}
 
                 <header className="student-topbar">
+
 
                     {/* Search */}
 
@@ -142,11 +358,15 @@ function StudentDashboard() {
 
                     <div className="student-profile">
 
+
                         {/* Notification */}
 
                         <div className="student-notification">
+
                             ♧
+
                             <span></span>
+
                         </div>
 
 
@@ -155,8 +375,12 @@ function StudentDashboard() {
                         <div className="student-profile-info">
 
                             <strong>
-                                {user?.full_name || "Student"}
+
+                                {user?.full_name ||
+                                    "Student"}
+
                             </strong>
+
 
                             <small>
                                 STUDENT VIEW
@@ -171,29 +395,39 @@ function StudentDashboard() {
 
                             {user?.full_name
                                 ?.charAt(0)
-                                ?.toUpperCase() || "S"}
+                                ?.toUpperCase() ||
+                                "S"}
 
                         </div>
 
+
                     </div>
+
 
                 </header>
 
 
-                {/* ================= CONTENT ================= */}
+                {/* =================================
+                    CONTENT
+                ================================= */}
 
                 <section className="student-content">
 
 
-                    {/* ================= JOIN LIVE QUIZ ================= */}
+                    {/* =================================
+                        JOIN LIVE QUIZ
+                    ================================= */}
 
                     <div className="join-live-section">
 
+
                         <div className="join-live-left">
+
 
                             <div className="join-live-icon">
                                 🚀
                             </div>
+
 
                             <div>
 
@@ -209,44 +443,96 @@ function StudentDashboard() {
 
                             </div>
 
+
                         </div>
 
 
                         <div className="join-live-right">
 
+
                             <input
                                 type="text"
+
                                 placeholder="E.G. 8X9F2A"
+
                                 value={joinCode}
-                                onChange={(e) =>
+
+                                onChange={(e) => {
+
+                                    const value =
+                                        e.target.value
+                                            .toUpperCase()
+                                            .replace(
+                                                /[^A-Z0-9]/g,
+                                                ""
+                                            )
+                                            .slice(
+                                                0,
+                                                6
+                                            );
+
                                     setJoinCode(
-                                        e.target.value.toUpperCase()
-                                    )
-                                }
+                                        value
+                                    );
+
+                                }}
+
                                 maxLength={6}
+
+                                disabled={joining}
+
+                                onKeyDown={(e) => {
+
+                                    if (
+                                        e.key ===
+                                        "Enter"
+                                    ) {
+
+                                        handleJoinSession();
+
+                                    }
+
+                                }}
+
                             />
 
 
                             <button
-                                onClick={handleJoinSession}
+                                onClick={
+                                    handleJoinSession
+                                }
+
+                                disabled={
+                                    joining
+                                }
                             >
-                                Enter Session →
+
+                                {joining
+                                    ? "Checking..."
+                                    : "Enter Session →"}
+
                             </button>
 
+
                         </div>
+
 
                     </div>
 
 
-                    {/* ================= PERFORMANCE ================= */}
+                    {/* =================================
+                        PERFORMANCE
+                    ================================= */}
 
                     <div className="performance-section">
+
 
                         <div className="performance-header">
 
                             <h2>
                                 Your Performance
                             </h2>
+
 
                             <button>
                                 View Full Report ↗
@@ -322,12 +608,15 @@ function StudentDashboard() {
 
                             </div>
 
+
                         </div>
 
                     </div>
 
 
-                    {/* ================= RECENT RESULTS ================= */}
+                    {/* =================================
+                        RECENT RESULTS
+                    ================================= */}
 
                     <div className="recent-results-section">
 
@@ -358,8 +647,13 @@ function StudentDashboard() {
                             </div>
 
                             <div className="result-score">
+
                                 92%
-                                <small>SCORE</small>
+
+                                <small>
+                                    SCORE
+                                </small>
+
                             </div>
 
                             <button className="result-button">
@@ -391,8 +685,13 @@ function StudentDashboard() {
                             </div>
 
                             <div className="result-score">
+
                                 78%
-                                <small>SCORE</small>
+
+                                <small>
+                                    SCORE
+                                </small>
+
                             </div>
 
                             <button className="result-button">
@@ -424,8 +723,13 @@ function StudentDashboard() {
                             </div>
 
                             <div className="result-score">
+
                                 88%
-                                <small>SCORE</small>
+
+                                <small>
+                                    SCORE
+                                </small>
+
                             </div>
 
                             <button className="result-button">
@@ -434,26 +738,37 @@ function StudentDashboard() {
 
                         </div>
 
+
                     </div>
+
 
                 </section>
 
 
-                {/* ================= FLOATING BUTTON ================= */}
+                {/* =================================
+                    FLOATING BUTTON
+                ================================= */}
 
                 <button
                     className="student-floating-button"
+
                     onClick={() =>
-                        navigate("/student/live-sessions")
+                        navigate(
+                            "/student/live-sessions"
+                        )
                     }
                 >
+
                     +
+
                 </button>
+
 
             </main>
 
         </div>
     );
 }
+
 
 export default StudentDashboard;
