@@ -5,6 +5,7 @@ import api from "./api";
 // QUIZ
 // =============================
 
+
 // Create Quiz
 export const createQuiz = async (quizData) => {
 
@@ -28,7 +29,7 @@ export const getTeacherQuizzes = async () => {
 };
 
 
-// Get Quiz
+// Get Quiz By ID
 export const getQuizById = async (quizId) => {
 
     const response = await api.get(
