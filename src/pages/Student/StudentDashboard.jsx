@@ -1,9 +1,7 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-
-import { useAuth } from "../../context/authContext";
-import api from "../../services/api";
-
+import {useEffect, useState} from "react";
+import {useNavigate} from "react-router-dom";
+import {useAuth} from "../../context/authContext";
+import {getStudentDashboard} from "../../services/studentService";
 import "./StudentDashboard.css";
 
 
@@ -14,26 +12,107 @@ function StudentDashboard() {
     const { user } = useAuth();
 
 
-    // ================================
-    // Join Code
-    // ================================
+    // ==========================================
+    // JOIN SESSION CODE
+    // ==========================================
 
     const [joinCode, setJoinCode] = useState("");
 
-    const [joining, setJoining] = useState(false);
+
+    // ==========================================
+    // DASHBOARD DATA
+    // ==========================================
+
+    const [dashboardData, setDashboardData] = useState({
+
+        completed: 0,
+
+        avgScore: 0,
+
+        upcoming: [],
+
+        recentResults: []
+
+    });
 
 
-    // ================================
-    // Join Live Session
-    // ================================
+    // ==========================================
+    // LOADING + ERROR
+    // ==========================================
 
-    const handleJoinSession = async () => {
+    const [loading, setLoading] = useState(true);
+
+    const [dashboardError, setDashboardError] = useState("");
+
+
+    // ==========================================
+    // LOAD DASHBOARD DATA
+    // ==========================================
+
+    useEffect(() => {
+
+        const loadDashboard = async () => {
+
+            try {
+
+                setLoading(true);
+
+                setDashboardError("");
+
+
+                const response =
+                    await getStudentDashboard();
+
+
+                console.log(
+                    "Student dashboard data:",
+                    response
+                );
+
+
+                if (response.success) {
+
+                    setDashboardData(
+                        response.data
+                    );
+
+                }
+
+            } catch (error) {
+
+                console.error(
+                    "Failed to load student dashboard:",
+                    error
+                );
+
+
+                setDashboardError(
+                    "Unable to load dashboard data."
+                );
+
+            } finally {
+
+                setLoading(false);
+
+            }
+
+        };
+
+
+        loadDashboard();
+
+    }, []);
+
+
+    // ==========================================
+    // JOIN LIVE SESSION
+    // ==========================================
+
+    const handleJoinSession = () => {
 
         const code =
             joinCode.trim().toUpperCase();
 
-
-        // Check empty
 
         if (!code) {
 
@@ -42,160 +121,64 @@ function StudentDashboard() {
             );
 
             return;
-        }
-
-
-        // Check length
-
-        if (code.length !== 6) {
-
-            alert(
-                "Please enter a valid 6-character session code."
-            );
-
-            return;
-        }
-
-
-        try {
-
-            setJoining(true);
-
-
-            console.log(
-                "Looking for session:",
-                code
-            );
-
-
-            // =================================
-            // Find session using join code
-            // =================================
-
-            const response =
-                await api.get(
-                    `/session/join/${code}`
-                );
-
-
-            console.log(
-                "Session response:",
-                response.data
-            );
-
-
-            const session =
-                response.data.data;
-
-
-            // =================================
-            // Check session
-            // =================================
-
-            if (!session) {
-
-                alert(
-                    "Session not found."
-                );
-
-                return;
-            }
-
-
-            // =================================
-            // Check if session ended
-            // =================================
-
-            if (
-                session.status ===
-                "Ended"
-            ) {
-
-                alert(
-                    "This quiz session has already ended."
-                );
-
-                return;
-            }
-
-
-            // =================================
-            // Session found
-            // =================================
-
-            console.log(
-                "Session found:",
-                session
-            );
-
-
-            // =================================
-            // Go to student quiz/session page
-            //
-            // Participants will be added later.
-            // =================================
-
-            navigate(
-                `/student/session/${session.session_id}`
-            );
-
-
-        } catch (error) {
-
-            console.error(
-                "Failed to join session:",
-                error
-            );
-
-
-            if (
-                error.response?.status ===
-                404
-            ) {
-
-                alert(
-                    "Invalid session code. Please check the code and try again."
-                );
-
-            } else {
-
-                alert(
-                    error.response?.data?.message ||
-                    "Unable to join the session. Please try again."
-                );
-            }
-
-        } finally {
-
-            setJoining(false);
 
         }
+
+
+        console.log(
+            "Joining session:",
+            code
+        );
+
+
+        // We will connect this to the
+        // actual session page later.
+
+        navigate(
+            `/student/session/${code}`
+        );
+
     };
 
 
-    // ================================
-    // Render
-    // ================================
+    // ==========================================
+    // LOGGED-IN STUDENT NAME
+    // ==========================================
+
+    const studentName =
+        user?.full_name || "Student";
+
+
+    const studentInitial =
+        studentName
+            ?.charAt(0)
+            ?.toUpperCase() || "S";
+
+
+    // ==========================================
+    // RENDER
+    // ==========================================
 
     return (
 
         <div className="student-dashboard">
 
 
-            {/* =================================
+            {/* =====================================
                 SIDEBAR
-            ================================= */}
+            ====================================== */}
 
             <aside className="student-sidebar">
 
 
-                {/* Logo */}
+                {/* LOGO */}
 
                 <div className="student-sidebar-logo">
 
                     <div className="student-logo-mark">
                         Q
                     </div>
+
 
                     <span>
                         QuizVerse
@@ -204,16 +187,18 @@ function StudentDashboard() {
                 </div>
 
 
-                {/* Navigation */}
+                {/* NAVIGATION */}
 
                 <nav className="student-sidebar-nav">
 
 
-                    {/* Dashboard */}
+                    {/* DASHBOARD */}
 
                     <div
-                        className="student-nav-item student-active"
-
+                        className="
+                            student-nav-item
+                            student-active
+                        "
                         onClick={() =>
                             navigate(
                                 "/student/dashboard"
@@ -230,11 +215,10 @@ function StudentDashboard() {
                     </div>
 
 
-                    {/* My Quizzes */}
+                    {/* MY QUIZZES */}
 
                     <div
                         className="student-nav-item"
-
                         onClick={() =>
                             navigate(
                                 "/student/quizzes"
@@ -251,11 +235,10 @@ function StudentDashboard() {
                     </div>
 
 
-                    {/* Live Sessions */}
+                    {/* LIVE SESSIONS */}
 
                     <div
                         className="student-nav-item"
-
                         onClick={() =>
                             navigate(
                                 "/student/live-sessions"
@@ -272,11 +255,10 @@ function StudentDashboard() {
                     </div>
 
 
-                    {/* AI Generator */}
+                    {/* AI GENERATOR */}
 
                     <div
                         className="student-nav-item"
-
                         onClick={() =>
                             navigate(
                                 "/student/ai-generator"
@@ -296,13 +278,12 @@ function StudentDashboard() {
                 </nav>
 
 
-                {/* Settings */}
+                {/* SETTINGS */}
 
                 <div className="student-sidebar-settings">
 
                     <div
                         className="student-nav-item"
-
                         onClick={() =>
                             navigate(
                                 "/student/settings"
@@ -324,21 +305,21 @@ function StudentDashboard() {
             </aside>
 
 
-            {/* =================================
+            {/* =====================================
                 MAIN
-            ================================= */}
+            ====================================== */}
 
             <main className="student-main">
 
 
                 {/* =================================
                     TOP BAR
-                ================================= */}
+                ================================== */}
 
                 <header className="student-topbar">
 
 
-                    {/* Search */}
+                    {/* SEARCH */}
 
                     <div className="student-search-box">
 
@@ -346,20 +327,23 @@ function StudentDashboard() {
                             ⌕
                         </span>
 
+
                         <input
                             type="text"
-                            placeholder="Search quizzes, topics..."
+                            placeholder="
+                                Search quizzes, topics...
+                            "
                         />
 
                     </div>
 
 
-                    {/* Profile */}
+                    {/* PROFILE */}
 
                     <div className="student-profile">
 
 
-                        {/* Notification */}
+                        {/* NOTIFICATION */}
 
                         <div className="student-notification">
 
@@ -370,15 +354,12 @@ function StudentDashboard() {
                         </div>
 
 
-                        {/* User information */}
+                        {/* STUDENT INFORMATION */}
 
                         <div className="student-profile-info">
 
                             <strong>
-
-                                {user?.full_name ||
-                                    "Student"}
-
+                                {studentName}
                             </strong>
 
 
@@ -389,14 +370,11 @@ function StudentDashboard() {
                         </div>
 
 
-                        {/* Avatar */}
+                        {/* AVATAR */}
 
                         <div className="student-profile-avatar">
 
-                            {user?.full_name
-                                ?.charAt(0)
-                                ?.toUpperCase() ||
-                                "S"}
+                            {studentInitial}
 
                         </div>
 
@@ -409,17 +387,19 @@ function StudentDashboard() {
 
                 {/* =================================
                     CONTENT
-                ================================= */}
+                ================================== */}
 
                 <section className="student-content">
 
 
                     {/* =================================
                         JOIN LIVE QUIZ
-                    ================================= */}
+                    ================================== */}
 
                     <div className="join-live-section">
 
+
+                        {/* LEFT SIDE */}
 
                         <div className="join-live-left">
 
@@ -435,10 +415,12 @@ function StudentDashboard() {
                                     Join Live Quiz
                                 </h2>
 
+
                                 <p>
-                                    Enter the 6-digit code provided
-                                    by your teacher to jump straight
-                                    into the action.
+                                    Enter the 6-digit code
+                                    provided by your teacher
+                                    to jump straight into
+                                    the action.
                                 </p>
 
                             </div>
@@ -447,53 +429,22 @@ function StudentDashboard() {
                         </div>
 
 
+                        {/* RIGHT SIDE */}
+
                         <div className="join-live-right">
 
 
                             <input
                                 type="text"
-
                                 placeholder="E.G. 8X9F2A"
-
                                 value={joinCode}
-
-                                onChange={(e) => {
-
-                                    const value =
+                                onChange={(e) =>
+                                    setJoinCode(
                                         e.target.value
                                             .toUpperCase()
-                                            .replace(
-                                                /[^A-Z0-9]/g,
-                                                ""
-                                            )
-                                            .slice(
-                                                0,
-                                                6
-                                            );
-
-                                    setJoinCode(
-                                        value
-                                    );
-
-                                }}
-
+                                    )
+                                }
                                 maxLength={6}
-
-                                disabled={joining}
-
-                                onKeyDown={(e) => {
-
-                                    if (
-                                        e.key ===
-                                        "Enter"
-                                    ) {
-
-                                        handleJoinSession();
-
-                                    }
-
-                                }}
-
                             />
 
 
@@ -501,16 +452,8 @@ function StudentDashboard() {
                                 onClick={
                                     handleJoinSession
                                 }
-
-                                disabled={
-                                    joining
-                                }
                             >
-
-                                {joining
-                                    ? "Checking..."
-                                    : "Enter Session →"}
-
+                                Enter Session →
                             </button>
 
 
@@ -521,11 +464,28 @@ function StudentDashboard() {
 
 
                     {/* =================================
+                        ERROR
+                    ================================== */}
+
+                    {dashboardError && (
+
+                        <div className="dashboard-error">
+
+                            {dashboardError}
+
+                        </div>
+
+                    )}
+
+
+                    {/* =================================
                         PERFORMANCE
-                    ================================= */}
+                    ================================== */}
 
                     <div className="performance-section">
 
+
+                        {/* PERFORMANCE HEADER */}
 
                         <div className="performance-header">
 
@@ -534,209 +494,311 @@ function StudentDashboard() {
                             </h2>
 
 
-                            <button>
+                            <button
+                                onClick={() =>
+                                    console.log(
+                                        "Full report clicked"
+                                    )
+                                }
+                            >
                                 View Full Report ↗
                             </button>
+
 
                         </div>
 
 
+                        {/* PERFORMANCE CARDS */}
+
                         <div className="performance-cards">
 
 
-                            {/* Upcoming */}
+                            {/* ==========================
+                                UPCOMING
+                            =========================== */}
 
                             <div className="performance-card">
+
 
                                 <div className="performance-icon">
                                     ◫
                                 </div>
 
+
                                 <div className="performance-label">
                                     UPCOMING
                                 </div>
 
+
                                 <div className="performance-value">
-                                    3
+
+                                    {loading
+
+                                        ? "..."
+
+                                        : dashboardData
+                                            .upcoming
+                                            .length
+
+                                    }
+
                                 </div>
+
 
                                 <div className="performance-description">
                                     Quizzes
                                 </div>
 
+
                             </div>
 
 
-                            {/* Completed */}
+                            {/* ==========================
+                                COMPLETED
+                            =========================== */}
 
                             <div className="performance-card">
+
 
                                 <div className="performance-icon">
                                     ▣
                                 </div>
 
+
                                 <div className="performance-label">
                                     COMPLETED
                                 </div>
 
+
                                 <div className="performance-value">
-                                    12
+
+                                    {loading
+
+                                        ? "..."
+
+                                        : dashboardData
+                                            .completed
+
+                                    }
+
                                 </div>
+
 
                                 <div className="performance-description">
                                     this term
                                 </div>
 
+
                             </div>
 
 
-                            {/* Average Score */}
+                            {/* ==========================
+                                AVG SCORE
+                            =========================== */}
 
                             <div className="performance-card">
+
 
                                 <div className="performance-icon">
                                     ♒
                                 </div>
 
+
                                 <div className="performance-label">
                                     AVG SCORE
                                 </div>
 
+
                                 <div className="score-circle">
-                                    85%
+
+                                    {loading
+
+                                        ? "..."
+
+                                        : `${Math.round(
+                                            Number(
+                                                dashboardData
+                                                    .avgScore
+                                            )
+                                        )}%`
+
+                                    }
+
                                 </div>
+
 
                             </div>
 
 
                         </div>
+
 
                     </div>
 
 
                     {/* =================================
                         RECENT RESULTS
-                    ================================= */}
+                    ================================== */}
 
                     <div className="recent-results-section">
+
 
                         <h2>
                             Recent Results
                         </h2>
 
 
-                        {/* Result 1 */}
+                        {/* LOADING */}
 
-                        <div className="result-item">
+                        {loading && (
 
-                            <div className="result-icon">
-                                ♟
-                            </div>
+                            <div className="empty-results">
 
-                            <div className="result-info">
-
-                                <strong>
-                                    Cellular Biology Fundamentals
-                                </strong>
-
-                                <small>
-                                    ▣ Oct 12&nbsp;&nbsp;•&nbsp;&nbsp;
-                                    24 Questions
-                                </small>
+                                Loading results...
 
                             </div>
 
-                            <div className="result-score">
-
-                                92%
-
-                                <small>
-                                    SCORE
-                                </small>
-
-                            </div>
-
-                            <button className="result-button">
-                                ▣
-                            </button>
-
-                        </div>
+                        )}
 
 
-                        {/* Result 2 */}
+                        {/* NO RESULTS */}
 
-                        <div className="result-item">
+                        {!loading &&
+                            dashboardData
+                                .recentResults
+                                .length === 0 && (
 
-                            <div className="result-icon">
-                                ◩
-                            </div>
+                                <div className="empty-results">
 
-                            <div className="result-info">
+                                    No quiz results yet.
 
-                                <strong>
-                                    World War II: European Theater
-                                </strong>
+                                </div>
 
-                                <small>
-                                    ▣ Oct 08&nbsp;&nbsp;•&nbsp;&nbsp;
-                                    15 Questions
-                                </small>
-
-                            </div>
-
-                            <div className="result-score">
-
-                                78%
-
-                                <small>
-                                    SCORE
-                                </small>
-
-                            </div>
-
-                            <button className="result-button">
-                                ▣
-                            </button>
-
-                        </div>
+                            )
+                        }
 
 
-                        {/* Result 3 */}
+                        {/* RESULTS */}
 
-                        <div className="result-item">
+                        {!loading &&
+                            dashboardData
+                                .recentResults
+                                .length > 0 && (
 
-                            <div className="result-icon">
-                                ▣
-                            </div>
+                                dashboardData
+                                    .recentResults
+                                    .map(
+                                        (result) => (
 
-                            <div className="result-info">
+                                            <div
+                                                className="
+                                                    result-item
+                                                "
+                                                key={
+                                                    result.result_id
+                                                }
+                                            >
 
-                                <strong>
-                                    Advanced Algebra: Polynomials
-                                </strong>
 
-                                <small>
-                                    ▣ Oct 01&nbsp;&nbsp;•&nbsp;&nbsp;
-                                    30 Questions
-                                </small>
+                                                {/* ICON */}
 
-                            </div>
+                                                <div
+                                                    className="
+                                                        result-icon
+                                                    "
+                                                >
+                                                    ▣
+                                                </div>
 
-                            <div className="result-score">
 
-                                88%
+                                                {/* QUIZ INFORMATION */}
 
-                                <small>
-                                    SCORE
-                                </small>
+                                                <div
+                                                    className="
+                                                        result-info
+                                                    "
+                                                >
 
-                            </div>
+                                                    <strong>
+                                                        {
+                                                            result.title
+                                                        }
+                                                    </strong>
 
-                            <button className="result-button">
-                                ▣
-                            </button>
 
-                        </div>
+                                                    <small>
+
+                                                        {
+                                                            result.subject ||
+                                                            "Quiz"
+                                                        }
+
+                                                        &nbsp;&nbsp;
+                                                        •
+                                                        &nbsp;&nbsp;
+
+                                                        {
+                                                            result.total_marks ||
+                                                            0
+                                                        }
+
+                                                        {" "}
+                                                        Questions
+
+                                                    </small>
+
+                                                </div>
+
+
+                                                {/* SCORE */}
+
+                                                <div
+                                                    className="
+                                                        result-score
+                                                    "
+                                                >
+
+                                                    {
+                                                        Math.round(
+                                                            Number(
+                                                                result
+                                                                    .percentage
+                                                            )
+                                                        )
+                                                    }%
+
+                                                    <small>
+                                                        SCORE
+                                                    </small>
+
+                                                </div>
+
+
+                                                {/* RESULT BUTTON */}
+
+                                                <button
+                                                    className="
+                                                        result-button
+                                                    "
+                                                    onClick={() =>
+                                                        console.log(
+                                                            "Result ID:",
+                                                            result
+                                                                .result_id
+                                                        )
+                                                    }
+                                                >
+                                                    ▣
+                                                </button>
+
+
+                                            </div>
+
+                                        )
+                                    )
+
+                            )
+                        }
 
 
                     </div>
@@ -745,13 +807,14 @@ function StudentDashboard() {
                 </section>
 
 
-                {/* =================================
+                {/* =====================================
                     FLOATING BUTTON
-                ================================= */}
+                ====================================== */}
 
                 <button
-                    className="student-floating-button"
-
+                    className="
+                        student-floating-button
+                    "
                     onClick={() =>
                         navigate(
                             "/student/live-sessions"
@@ -766,8 +829,11 @@ function StudentDashboard() {
 
             </main>
 
+
         </div>
+
     );
+
 }
 
 
