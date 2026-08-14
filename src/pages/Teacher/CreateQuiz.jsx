@@ -28,8 +28,6 @@ function CreateQuiz() {
 
     const navigate = useNavigate();
 
-    // IMPORTANT:
-    // App.jsx uses :quizId
     const { quizId } = useParams();
 
     const { user } = useAuth();
@@ -41,11 +39,9 @@ function CreateQuiz() {
     // STATE
     // ==========================================
 
-    const [loading, setLoading] =
-        useState(isEditMode);
+    const [loading, setLoading] = useState(isEditMode);
 
-    const [saving, setSaving] =
-        useState(false);
+    const [saving, setSaving] = useState(false);
 
 
     // ==========================================
@@ -125,12 +121,68 @@ function CreateQuiz() {
 
 
     // ==========================================
+    // CREATE BLANK QUESTION
+    // ==========================================
+
+    const createBlankQuestion = () => {
+
+        const id = Date.now();
+
+        return {
+
+            id,
+
+            databaseId: null,
+
+            text: "",
+
+            type: "MCQ",
+
+            points: 1,
+
+            options: [
+
+                {
+                    id: id + 1,
+                    databaseId: null,
+                    text: "",
+                    correct: true
+                },
+
+                {
+                    id: id + 2,
+                    databaseId: null,
+                    text: "",
+                    correct: false
+                },
+
+                {
+                    id: id + 3,
+                    databaseId: null,
+                    text: "",
+                    correct: false
+                },
+
+                {
+                    id: id + 4,
+                    databaseId: null,
+                    text: "",
+                    correct: false
+                }
+
+            ]
+
+        };
+
+    };
+
+
+    // ==========================================
     // LOAD EXISTING QUIZ
     // ==========================================
 
     useEffect(() => {
 
-        // Creating a new quiz
         if (!isEditMode) {
 
             setLoading(false);
@@ -148,7 +200,7 @@ function CreateQuiz() {
 
 
                 // ==================================
-                // 1. GET QUIZ
+                // GET QUIZ
                 // ==================================
 
                 const quizResponse =
@@ -168,7 +220,7 @@ function CreateQuiz() {
 
 
                 // ==================================
-                // 2. LOAD QUIZ INFORMATION
+                // QUIZ INFORMATION
                 // ==================================
 
                 setQuizTitle(
@@ -198,7 +250,7 @@ function CreateQuiz() {
 
 
                 // ==================================
-                // 3. GET QUESTIONS
+                // GET QUESTIONS
                 // ==================================
 
                 const questionResponse =
@@ -211,16 +263,14 @@ function CreateQuiz() {
 
 
                 // ==================================
-                // 4. LOAD OPTIONS
+                // LOAD OPTIONS
                 // ==================================
 
                 const loadedQuestions =
                     await Promise.all(
 
                         databaseQuestions.map(
-                            async (
-                                question
-                            ) => {
+                            async (question) => {
 
                                 const optionResponse =
                                     await getOptionsByQuestionId(
@@ -284,21 +334,16 @@ function CreateQuiz() {
 
 
                 // ==================================
-                // 5. PUT INTO REACT STATE
+                // PUT INTO REACT STATE
                 // ==================================
 
-                if (
-                    loadedQuestions.length > 0
-                ) {
+                if (loadedQuestions.length > 0) {
 
                     setQuestions(
                         loadedQuestions
                     );
 
                 } else {
-
-                    // No questions found.
-                    // Keep one blank question.
 
                     setQuestions([
                         createBlankQuestion()
@@ -342,63 +387,6 @@ function CreateQuiz() {
 
 
     // ==========================================
-    // CREATE BLANK QUESTION
-    // ==========================================
-
-    const createBlankQuestion = () => {
-
-        const id = Date.now();
-
-        return {
-
-            id,
-
-            databaseId: null,
-
-            text: "",
-
-            type: "MCQ",
-
-            points: 1,
-
-            options: [
-
-                {
-                    id: id + 1,
-                    databaseId: null,
-                    text: "",
-                    correct: true
-                },
-
-                {
-                    id: id + 2,
-                    databaseId: null,
-                    text: "",
-                    correct: false
-                },
-
-                {
-                    id: id + 3,
-                    databaseId: null,
-                    text: "",
-                    correct: false
-                },
-
-                {
-                    id: id + 4,
-                    databaseId: null,
-                    text: "",
-                    correct: false
-                }
-
-            ]
-
-        };
-
-    };
-
-
-    // ==========================================
     // UPDATE QUESTION TEXT
     // ==========================================
 
@@ -411,8 +399,7 @@ function CreateQuiz() {
             currentQuestions =>
                 currentQuestions.map(
                     question =>
-                        question.id ===
-                        questionId
+                        question.id === questionId
                             ? {
                                 ...question,
                                 text: value
@@ -437,8 +424,7 @@ function CreateQuiz() {
             currentQuestions =>
                 currentQuestions.map(
                     question =>
-                        question.id ===
-                        questionId
+                        question.id === questionId
                             ? {
                                 ...question,
                                 type: value
@@ -451,7 +437,7 @@ function CreateQuiz() {
 
 
     // ==========================================
-    // UPDATE POINTS
+    // UPDATE QUESTION POINTS
     // ==========================================
 
     const updateQuestionPoints = (
@@ -463,12 +449,10 @@ function CreateQuiz() {
             currentQuestions =>
                 currentQuestions.map(
                     question =>
-                        question.id ===
-                        questionId
+                        question.id === questionId
                             ? {
                                 ...question,
-                                points:
-                                    Number(value)
+                                points: Number(value)
                             }
                             : question
                 )
@@ -493,8 +477,7 @@ function CreateQuiz() {
                     question => {
 
                         if (
-                            question.id !==
-                            questionId
+                            question.id !== questionId
                         ) {
                             return question;
                         }
@@ -507,8 +490,7 @@ function CreateQuiz() {
                             options:
                                 question.options.map(
                                     option =>
-                                        option.id ===
-                                        optionId
+                                        option.id === optionId
                                             ? {
                                                 ...option,
                                                 text: value
@@ -540,8 +522,7 @@ function CreateQuiz() {
                     question => {
 
                         if (
-                            question.id !==
-                            questionId
+                            question.id !== questionId
                         ) {
                             return question;
                         }
@@ -558,8 +539,7 @@ function CreateQuiz() {
                                         ...option,
 
                                         correct:
-                                            option.id ===
-                                            optionId
+                                            option.id === optionId
 
                                     })
                                 )
@@ -587,8 +567,7 @@ function CreateQuiz() {
                     question => {
 
                         if (
-                            question.id !==
-                            questionId
+                            question.id !== questionId
                         ) {
                             return question;
                         }
@@ -635,16 +614,14 @@ function CreateQuiz() {
                     question => {
 
                         if (
-                            question.id !==
-                            questionId
+                            question.id !== questionId
                         ) {
                             return question;
                         }
 
 
                         if (
-                            question.options.length <=
-                            2
+                            question.options.length <= 2
                         ) {
                             return question;
                         }
@@ -657,8 +634,7 @@ function CreateQuiz() {
                             options:
                                 question.options.filter(
                                     option =>
-                                        option.id !==
-                                        optionId
+                                        option.id !== optionId
                                 )
 
                         };
@@ -678,8 +654,11 @@ function CreateQuiz() {
 
         setQuestions(
             currentQuestions => [
+
                 ...currentQuestions,
+
                 createBlankQuestion()
+
             ]
         );
 
@@ -705,8 +684,7 @@ function CreateQuiz() {
             currentQuestions =>
                 currentQuestions.filter(
                     question =>
-                        question.id !==
-                        questionId
+                        question.id !== questionId
                 )
         );
 
@@ -963,56 +941,11 @@ function CreateQuiz() {
 
 
         // ==================================
-        // CREATE LIVE SESSION
-        // ==================================
-
-        const sessionResponse =
-            await api.post(
-                "/session/create",
-                {
-                    quiz_id:
-                        newQuizId
-                }
-            );
-
-
-        const session =
-            sessionResponse.data.data;
-
-
-        if (
-            !session ||
-            !session.session_id ||
-            !session.join_code
-        ) {
-
-            throw new Error(
-                "Quiz was created, but the live session could not be created."
-            );
-
-        }
-
-
-        // ==================================
-        // GO TO JOIN CODE SCREEN
+        // GO TO EDIT PAGE
         // ==================================
 
         navigate(
-            "/teacher/live-session",
-            {
-                state: {
-
-                    sessionId:
-                        session.session_id,
-
-                    quizId:
-                        newQuizId,
-
-                    joinCode:
-                        session.join_code
-
-                }
-            }
+            `/teacher/quizzes/${newQuizId}/edit`
         );
 
     };
@@ -1238,6 +1171,7 @@ function CreateQuiz() {
 
             }
 
+
             // ==================================
             // NEW QUESTION
             // ==================================
@@ -1363,35 +1297,21 @@ function CreateQuiz() {
 
         }
 
-
-        alert(
-            "Quiz updated successfully!"
-        );
-
-
-        navigate(
-            "/teacher/quizzes"
-        );
-
     };
 
 
     // ==========================================
-    // PUBLISH / SAVE
+    // SAVE QUIZ
     // ==========================================
 
-    const handlePublish = async () => {
+    const handleSave = async () => {
 
-        if (
-            saving
-        ) {
+        if (saving) {
             return;
         }
 
 
-        if (
-            !validateQuiz()
-        ) {
+        if (!validateQuiz()) {
             return;
         }
 
@@ -1401,13 +1321,26 @@ function CreateQuiz() {
             setSaving(true);
 
 
-            if (
-                isEditMode
-            ) {
+            // ==================================
+            // EXISTING QUIZ
+            // ==================================
+
+            if (isEditMode) {
 
                 await updateExistingQuiz();
 
-            } else {
+                alert(
+                    "Quiz saved successfully!"
+                );
+
+            }
+
+
+            // ==================================
+            // NEW QUIZ
+            // ==================================
+
+            else {
 
                 await createNewQuiz();
 
@@ -1425,7 +1358,6 @@ function CreateQuiz() {
                 error.response?.data
             );
 
-
             alert(
                 error.response?.data?.message ||
                 error.message ||
@@ -1442,12 +1374,134 @@ function CreateQuiz() {
 
 
     // ==========================================
+    // PUBLISH QUIZ
+    // ==========================================
+
+    const handlePublish = async () => {
+
+        if (saving) {
+            return;
+        }
+
+
+        if (!validateQuiz()) {
+            return;
+        }
+
+
+        try {
+
+            setSaving(true);
+
+
+            // ==================================
+            // NEW QUIZ
+            // ==================================
+
+            if (!isEditMode) {
+
+                // First create the quiz
+                // and questions.
+
+                await createNewQuiz();
+
+                return;
+
+            }
+
+
+            // ==================================
+            // SAVE LATEST CHANGES
+            // ==================================
+
+            await updateExistingQuiz();
+
+
+            // ==================================
+            // CREATE LIVE SESSION
+            // ==================================
+
+            const sessionResponse =
+                await api.post(
+                    "/session/create",
+                    {
+                        quiz_id:
+                            Number(quizId)
+                    }
+                );
+
+
+            const session =
+                sessionResponse.data.data;
+
+
+            if (
+                !session ||
+                !session.session_id ||
+                !session.join_code
+            ) {
+
+                throw new Error(
+                    "Quiz was saved, but the live session could not be created."
+                );
+
+            }
+
+
+            // ==================================
+            // GO TO LIVE SESSION
+            // ==================================
+
+            navigate(
+                "/teacher/live-session",
+                {
+                    state: {
+
+                        sessionId:
+                            session.session_id,
+
+                        quizId:
+                            Number(quizId),
+
+                        joinCode:
+                            session.join_code
+
+                    }
+                }
+            );
+
+        } catch (error) {
+
+            console.error(
+                "Quiz publish error:",
+                error
+            );
+
+            console.error(
+                "Server response:",
+                error.response?.data
+            );
+
+            alert(
+                error.response?.data?.message ||
+                error.message ||
+                "Failed to publish quiz."
+            );
+
+        } finally {
+
+            setSaving(false);
+
+        }
+
+    };
+
+
+    // ==========================================
     // LOADING SCREEN
     // ==========================================
 
-    if (
-        loading
-    ) {
+    if (loading) {
 
         return (
 
@@ -1517,11 +1571,13 @@ function CreateQuiz() {
                             )
                         }
                     >
+
                         <span>
                             ▦
                         </span>
 
                         Dashboard
+
                     </button>
 
 
@@ -1533,11 +1589,13 @@ function CreateQuiz() {
                             )
                         }
                     >
+
                         <span>
                             ☑
                         </span>
 
                         My Quizzes
+
                     </button>
 
 
@@ -1545,15 +1603,17 @@ function CreateQuiz() {
                         className="nav-item"
                         onClick={() =>
                             navigate(
-                                "/teacher/live-sessions"
+                                "/teacher/live-session"
                             )
                         }
                     >
+
                         <span>
                             ◉
                         </span>
 
                         Live Sessions
+
                     </button>
 
 
@@ -1565,11 +1625,13 @@ function CreateQuiz() {
                             )
                         }
                     >
+
                         <span>
                             ✦
                         </span>
 
                         AI Generator
+
                     </button>
 
                 </nav>
@@ -1585,11 +1647,13 @@ function CreateQuiz() {
                             )
                         }
                     >
+
                         <span>
                             ⚙
                         </span>
 
                         Settings
+
                     </button>
 
                 </div>
@@ -1712,7 +1776,14 @@ function CreateQuiz() {
                     </div>
 
 
+                    {/* =================================
+                        ACTION BUTTONS
+                    ================================= */}
+
                     <div className="editor-actions">
+
+
+                        {/* PREVIEW */}
 
                         <button
                             className="preview-button"
@@ -1726,28 +1797,35 @@ function CreateQuiz() {
                         </button>
 
 
+                        {/* SAVE */}
+
                         <button
-                            className="publish-button"
-                            onClick={
-                                handlePublish
-                            }
-                            disabled={
-                                saving
-                            }
+                            className="save-button"
+                            onClick={handleSave}
+                            disabled={saving}
                         >
 
                             {
                                 saving
-                                    ? (
-                                        isEditMode
-                                            ? "Saving..."
-                                            : "Publishing..."
-                                    )
-                                    : (
-                                        isEditMode
-                                            ? "Save Changes"
-                                            : "Publish"
-                                    )
+                                    ? "Saving..."
+                                    : "Save Changes"
+                            }
+
+                        </button>
+
+
+                        {/* PUBLISH */}
+
+                        <button
+                            className="publish-button"
+                            onClick={handlePublish}
+                            disabled={saving}
+                        >
+
+                            {
+                                saving
+                                    ? "Processing..."
+                                    : "Publish"
                             }
 
                         </button>
@@ -1891,6 +1969,8 @@ function CreateQuiz() {
                                                 >
 
 
+                                                    {/* CORRECT */}
+
                                                     <button
                                                         className={`correct-selector ${
                                                             option.correct
@@ -1914,6 +1994,8 @@ function CreateQuiz() {
                                                     </button>
 
 
+                                                    {/* LETTER */}
+
                                                     <span className="option-letter">
 
                                                         {
@@ -1925,6 +2007,8 @@ function CreateQuiz() {
 
                                                     </span>
 
+
+                                                    {/* TEXT */}
 
                                                     <input
                                                         type="text"
@@ -1946,6 +2030,8 @@ function CreateQuiz() {
                                                     />
 
 
+                                                    {/* REMOVE */}
+
                                                     <button
                                                         className="remove-option"
                                                         onClick={() =>
@@ -1964,6 +2050,8 @@ function CreateQuiz() {
                                         )}
 
 
+                                        {/* ADD OPTION */}
+
                                         <button
                                             className="add-option-button"
                                             onClick={() =>
@@ -1972,9 +2060,7 @@ function CreateQuiz() {
                                                 )
                                             }
                                         >
-
                                             + Add Option
-
                                         </button>
 
                                     </div>
@@ -2020,9 +2106,7 @@ function CreateQuiz() {
                                 addQuestion
                             }
                         >
-
                             + Add New Question
-
                         </button>
 
                     </section>
@@ -2225,9 +2309,7 @@ function CreateQuiz() {
                                 )
                             }
                         >
-
                             ✦ AI Assist
-
                         </button>
 
                     </aside>

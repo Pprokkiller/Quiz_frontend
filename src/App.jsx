@@ -30,6 +30,7 @@ import LiveSession from "./pages/Teacher/LiveSession";
 
 import StudentDashboard from "./pages/Student/StudentDashboard";
 import StudentSession from "./pages/Student/StudentSession";
+import StudentQuiz from "./pages/Student/StudentQuiz";
 
 
 function App() {
@@ -121,6 +122,10 @@ function App() {
                 <Route
                     path="/student/session/:sessionId"
                     element={<StudentSession />}
+                />
+                <Route
+                    path="/student/session/:sessionId/quiz"
+                    element={<StudentQuiz />}
                 />
 
 
