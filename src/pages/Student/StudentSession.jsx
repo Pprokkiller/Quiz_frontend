@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useCallback } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 
 import api from "../../services/api";
@@ -23,20 +23,55 @@ function StudentSession() {
     // GET SESSION
     // ==========================================
 
-    const getSession = async () => {
+    const getSession = useCallback(async () => {
 
         try {
 
-            const response = await api.get(
-                `/session/${sessionId}`
-            );
+            let response;
+
+
+            /*
+             * If the URL contains a number,
+             * it is a Session ID.
+             *
+             * Example:
+             * /student/session/17
+             */
+
+            if (!isNaN(sessionId)) {
+
+                response = await api.get(
+                    `/session/${sessionId}`
+                );
+
+            }
+
+
+            /*
+             * If the URL contains letters,
+             * it is a Join Code.
+             *
+             * Example:
+             * /student/session/H1OISL
+             */
+
+            else {
+
+                response = await api.get(
+                    `/session/join/${sessionId}`
+                );
+
+            }
+
 
             const sessionData =
                 response.data.data;
 
+
             setSession(sessionData);
 
             setError("");
+
 
         } catch (error) {
 
@@ -44,6 +79,7 @@ function StudentSession() {
                 "Failed to get session:",
                 error
             );
+
 
             setError(
                 error.response?.data?.message ||
@@ -55,7 +91,8 @@ function StudentSession() {
             setLoading(false);
 
         }
-    };
+
+    }, [sessionId]);
 
 
     // ==========================================
@@ -64,11 +101,24 @@ function StudentSession() {
 
     useEffect(() => {
 
+        if (!sessionId) {
+
+            setError("Invalid session.");
+
+            setLoading(false);
+
+            return;
+
+        }
+
+
         // Get session immediately
+
         getSession();
 
 
-        // Then check every 2 seconds
+        // Poll every 2 seconds
+
         const interval = setInterval(() => {
 
             getSession();
@@ -76,16 +126,13 @@ function StudentSession() {
         }, 2000);
 
 
-        // IMPORTANT:
-        // Stop polling when student leaves page
-
         return () => {
 
             clearInterval(interval);
 
         };
 
-    }, [sessionId]);
+    }, [sessionId, getSession]);
 
 
     // ==========================================
@@ -100,7 +147,8 @@ function StudentSession() {
 
                 <div className="student-session-card">
 
-                    <div className="session-spinner"></div>
+                    <div className="session-spinner">
+                    </div>
 
                     <h2>
                         Joining Quiz...
@@ -178,6 +226,10 @@ function StudentSession() {
                         Session Not Found
                     </h2>
 
+                    <p>
+                        This quiz session could not be found.
+                    </p>
+
                     <button
                         onClick={() =>
                             navigate(
@@ -221,10 +273,12 @@ function StudentSession() {
             </div>
 
 
-            {/* CARD */}
+            {/* SESSION CARD */}
 
             <div className="student-session-card">
 
+
+                {/* ICON */}
 
                 <div className="waiting-icon">
                     🚀
@@ -250,16 +304,15 @@ function StudentSession() {
                 </div>
 
 
+                {/* TITLE */}
+
                 <h1>
                     You're In!
                 </h1>
 
 
                 <p className="session-description">
-
-                    You've successfully joined
-                    the quiz session.
-
+                    You've successfully joined the quiz session.
                 </p>
 
 
@@ -285,12 +338,10 @@ function StudentSession() {
                         </h3>
 
                         <p>
-
                             The quiz hasn't started yet.
-                            Stay on this page — we'll
-                            automatically let you know
-                            when it begins.
-
+                            Stay on this page — the quiz
+                            will begin when your teacher
+                            starts the session.
                         </p>
 
                         <div className="polling-indicator">
@@ -319,20 +370,15 @@ function StudentSession() {
                         </h3>
 
                         <p>
-
-                            Your teacher has started
-                            the quiz.
-
+                            Your teacher has started the quiz.
                         </p>
 
                         <button
-                            onClick={() => {
-
+                            onClick={() =>
                                 navigate(
-                                    `/student/session/${sessionId}/quiz`
-                                );
-
-                            }}
+                                    `/student/session/${session.session_id}/quiz`
+                                )
+                            }
                         >
                             Start Quiz →
                         </button>
@@ -367,16 +413,13 @@ function StudentSession() {
 
                 <button
                     className="leave-session-button"
-
                     onClick={() =>
                         navigate(
                             "/student/dashboard"
                         )
                     }
                 >
-
                     ← Leave Session
-
                 </button>
 
 

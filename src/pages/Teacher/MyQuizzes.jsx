@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
-import "./MyQuizzes.css";
-
 import { useNavigate } from "react-router-dom";
+
 import { useAuth } from "../../context/authContext";
 
-import { getTeacherQuizzes } from "../../services/quizService";
+import {
+    getTeacherQuizzes,
+    deleteQuiz
+} from "../../services/quizService";
+
+import "./MyQuizzes.css";
 
 
 function MyQuizzes() {
@@ -14,20 +18,29 @@ function MyQuizzes() {
     const { user } = useAuth();
 
 
-    // =============================
+    // ==========================================
     // STATE
-    // =============================
+    // ==========================================
 
-    const [quizzes, setQuizzes] = useState([]);
+    const [quizzes, setQuizzes] =
+        useState([]);
 
-    const [loading, setLoading] = useState(true);
+    const [loading, setLoading] =
+        useState(true);
 
-    const [error, setError] = useState("");
+    const [error, setError] =
+        useState("");
+
+    const [deletingId, setDeletingId] =
+        useState(null);
+
+    const [searchTerm, setSearchTerm] =
+        useState("");
 
 
-    // =============================
-    // GET QUIZZES
-    // =============================
+    // ==========================================
+    // FETCH QUIZZES
+    // ==========================================
 
     const fetchQuizzes = async () => {
 
@@ -38,7 +51,8 @@ function MyQuizzes() {
             setError("");
 
 
-            const response = await getTeacherQuizzes();
+            const response =
+                await getTeacherQuizzes();
 
 
             console.log(
@@ -51,7 +65,6 @@ function MyQuizzes() {
                 response.data || []
             );
 
-
         } catch (error) {
 
             console.error(
@@ -62,21 +75,22 @@ function MyQuizzes() {
 
             setError(
                 error.response?.data?.message ||
+                error.response?.data?.error ||
                 "Unable to load quizzes."
             );
-
 
         } finally {
 
             setLoading(false);
 
         }
+
     };
 
 
-    // =============================
-    // LOAD QUIZZES WHEN PAGE OPENS
-    // =============================
+    // ==========================================
+    // LOAD ON PAGE OPEN
+    // ==========================================
 
     useEffect(() => {
 
@@ -85,9 +99,120 @@ function MyQuizzes() {
     }, []);
 
 
-    // =============================
+    // ==========================================
+    // DELETE QUIZ
+    // ==========================================
+
+    const handleDelete = async (
+        quizId,
+        quizTitle
+    ) => {
+
+        const confirmed =
+            window.confirm(
+                `Are you sure you want to delete "${quizTitle}"?\n\nThis cannot be undone.`
+            );
+
+
+        if (!confirmed) {
+            return;
+        }
+
+
+        try {
+
+            setDeletingId(
+                quizId
+            );
+
+
+            await deleteQuiz(
+                quizId
+            );
+
+
+            // Remove from UI immediately
+
+            setQuizzes(
+                currentQuizzes =>
+                    currentQuizzes.filter(
+                        quiz =>
+                            quiz.quiz_id !==
+                            quizId
+                    )
+            );
+
+
+        } catch (error) {
+
+            console.error(
+                "Failed to delete quiz:",
+                error
+            );
+
+
+            alert(
+                error.response?.data?.message ||
+                error.response?.data?.error ||
+                "Failed to delete quiz."
+            );
+
+        } finally {
+
+            setDeletingId(null);
+
+        }
+
+    };
+
+
+    // ==========================================
+    // SEARCH
+    // ==========================================
+
+    const filteredQuizzes =
+        quizzes.filter(
+            quiz => {
+
+                const search =
+                    searchTerm
+                        .trim()
+                        .toLowerCase();
+
+
+                if (!search) {
+                    return true;
+                }
+
+
+                const title =
+                    quiz.title
+                        ?.toLowerCase() || "";
+
+
+                const subject =
+                    quiz.subject
+                        ?.toLowerCase() || "";
+
+
+                const difficulty =
+                    quiz.difficulty
+                        ?.toLowerCase() || "";
+
+
+                return (
+                    title.includes(search) ||
+                    subject.includes(search) ||
+                    difficulty.includes(search)
+                );
+
+            }
+        );
+
+
+    // ==========================================
     // LOADING
-    // =============================
+    // ==========================================
 
     if (loading) {
 
@@ -116,9 +241,38 @@ function MyQuizzes() {
 
                     <div className="my-quizzes-content">
 
-                        <h2>
-                            Loading quizzes...
-                        </h2>
+                        <div className="page-header">
+
+                            <div>
+
+                                <h1>
+                                    My Quizzes
+                                </h1>
+
+                                <p>
+                                    Loading your quizzes...
+                                </p>
+
+                            </div>
+
+                        </div>
+
+
+                        <div className="empty-state">
+
+                            <div className="empty-icon">
+                                ✦
+                            </div>
+
+                            <h2>
+                                Loading quizzes...
+                            </h2>
+
+                            <p>
+                                Please wait while we load your quizzes.
+                            </p>
+
+                        </div>
 
                     </div>
 
@@ -127,24 +281,27 @@ function MyQuizzes() {
             </div>
 
         );
+
     }
 
 
-    // =============================
-    // MAIN PAGE
-    // =============================
+    // ==========================================
+    // MAIN
+    // ==========================================
 
     return (
 
         <div className="teacher-dashboard">
 
 
-            {/* ================= SIDEBAR ================= */}
+            {/* =================================
+                SIDEBAR
+            ================================= */}
 
             <aside className="sidebar">
 
 
-                {/* Logo */}
+                {/* LOGO */}
 
                 <div className="sidebar-logo">
 
@@ -159,7 +316,7 @@ function MyQuizzes() {
                 </div>
 
 
-                {/* Navigation */}
+                {/* NAVIGATION */}
 
                 <nav className="sidebar-nav">
 
@@ -188,6 +345,11 @@ function MyQuizzes() {
 
                     <div
                         className="nav-item active"
+                        onClick={() =>
+                            navigate(
+                                "/teacher/quizzes"
+                            )
+                        }
                     >
 
                         <span>
@@ -238,11 +400,10 @@ function MyQuizzes() {
 
                     </div>
 
-
                 </nav>
 
 
-                {/* Settings */}
+                {/* SETTINGS */}
 
                 <div className="sidebar-settings">
 
@@ -265,21 +426,24 @@ function MyQuizzes() {
 
                 </div>
 
-
             </aside>
 
 
-            {/* ================= MAIN ================= */}
+            {/* =================================
+                MAIN
+            ================================= */}
 
             <main className="dashboard-main">
 
 
-                {/* ================= TOP BAR ================= */}
+                {/* =================================
+                    TOP BAR
+                ================================= */}
 
                 <header className="topbar">
 
 
-                    {/* Search */}
+                    {/* SEARCH */}
 
                     <div className="search-box">
 
@@ -290,17 +454,22 @@ function MyQuizzes() {
                         <input
                             type="text"
                             placeholder="Search quizzes, topics..."
+                            value={searchTerm}
+                            onChange={
+                                event =>
+                                    setSearchTerm(
+                                        event.target.value
+                                    )
+                            }
                         />
 
                     </div>
 
 
-                    {/* Teacher Profile */}
+                    {/* PROFILE */}
 
                     <div className="teacher-profile">
 
-
-                        {/* Notification */}
 
                         <div className="notification">
 
@@ -311,51 +480,46 @@ function MyQuizzes() {
                         </div>
 
 
-                        {/* User Information */}
-
                         <div className="profile-info">
 
                             <strong>
-
-                                {user?.full_name ||
-                                    "Teacher"}
-
+                                {
+                                    user?.full_name ||
+                                    "Teacher"
+                                }
                             </strong>
 
-
                             <small>
-
                                 TEACHER VIEW
-
                             </small>
 
                         </div>
 
 
-                        {/* Avatar */}
-
                         <div className="profile-avatar">
 
-                            {user?.full_name
-                                ?.charAt(0)
-                                ?.toUpperCase() ||
-                                "T"}
+                            {
+                                user?.full_name
+                                    ?.charAt(0)
+                                    ?.toUpperCase() ||
+                                "T"
+                            }
 
                         </div>
 
-
                     </div>
-
 
                 </header>
 
 
-                {/* ================= PAGE CONTENT ================= */}
+                {/* =================================
+                    PAGE CONTENT
+                ================================= */}
 
                 <section className="my-quizzes-content">
 
 
-                    {/* ================= PAGE HEADER ================= */}
+                    {/* PAGE HEADER */}
 
                     <div className="page-header">
 
@@ -390,11 +554,12 @@ function MyQuizzes() {
 
                         </button>
 
-
                     </div>
 
 
-                    {/* ================= ERROR ================= */}
+                    {/* =================================
+                        ERROR
+                    ================================= */}
 
                     {error && (
 
@@ -402,12 +567,23 @@ function MyQuizzes() {
 
                             {error}
 
+
+                            <button
+                                onClick={
+                                    fetchQuizzes
+                                }
+                            >
+                                Retry
+                            </button>
+
                         </div>
 
                     )}
 
 
-                    {/* ================= NO QUIZZES ================= */}
+                    {/* =================================
+                        EMPTY STATE
+                    ================================= */}
 
                     {!error &&
                         quizzes.length === 0 && (
@@ -438,7 +614,9 @@ function MyQuizzes() {
                                         )
                                     }
                                 >
+
                                     Create Your First Quiz
+
                                 </button>
 
 
@@ -447,179 +625,254 @@ function MyQuizzes() {
                         )}
 
 
-                    {/* ================= QUIZ LIST ================= */}
+                    {/* =================================
+                        NO SEARCH RESULTS
+                    ================================= */}
 
                     {!error &&
-                        quizzes.length > 0 && (
-
-                            <div className="quiz-grid">
-
-
-                                {quizzes.map((quiz) => (
-
-                                    <div
-                                        className="quiz-card"
-                                        key={quiz.quiz_id}
-                                    >
-
-
-                                        {/* ================= CARD HEADER ================= */}
-
-                                        <div className="quiz-card-header">
-
-
-                                            <div className="quiz-icon">
-                                                ✦
-                                            </div>
-
-
-                                            {/* Quiz Type */}
-
-                                            <span
-                                                className={`quiz-status ${
-                                                    quiz.quiz_type
-                                                        ?.toLowerCase()
-                                                        .replace(
-                                                            /\s+/g,
-                                                            "-"
-                                                        )
-                                                }`}
-                                            >
-
-                                                {quiz.quiz_type ||
-                                                    "Quiz"}
-
-                                            </span>
-
-
-                                        </div>
-
-
-                                        {/* ================= CARD BODY ================= */}
-
-                                        <div className="quiz-card-body">
-
-
-                                            {/* Title */}
-
-                                            <h2>
-
-                                                {quiz.title ||
-                                                    "Untitled Quiz"}
-
-                                            </h2>
-
-
-                                            {/* Subject */}
-
-                                            <p className="quiz-subject">
-
-                                                {quiz.subject ||
-                                                    "No subject"}
-
-                                            </p>
-
-
-                                            {/* Details */}
-
-                                            <div className="quiz-details">
-
-
-                                                <span>
-
-                                                    {quiz.question_count ||
-                                                        0}
-
-                                                    {" "}
-                                                    Questions
-
-                                                </span>
-
-
-                                                <span>
-
-                                                    {quiz.total_marks ||
-                                                        0}
-
-                                                    {" "}
-                                                    Points
-
-                                                </span>
-
-
-                                                <span>
-
-                                                    {quiz.difficulty ||
-                                                        "Not specified"}
-
-                                                </span>
-
-
-                                            </div>
-
-
-                                        </div>
-
-
-                                        {/* ================= CARD FOOTER ================= */}
-
-                                        <div className="quiz-card-footer">
-
-
-                                            {/* Edit */}
-
-                                            <button
-                                                className="secondary-button"
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/teacher/quizzes/${quiz.quiz_id}`
-                                                    )
-                                                }
-                                            >
-
-                                                Edit
-
-                                            </button>
-
-
-                                            {/* Open Quiz */}
-
-                                            <button
-                                                className="primary-button"
-                                                onClick={() =>
-                                                    navigate(
-                                                        `/teacher/quizzes/${quiz.quiz_id}`
-                                                    )
-                                                }
-                                            >
-
-                                                Open Quiz
-
-                                            </button>
-
-
-                                        </div>
-
-
-                                    </div>
-
-                                ))}
-
+                        quizzes.length > 0 &&
+                        filteredQuizzes.length === 0 && (
+
+                            <div className="empty-state">
+
+                                <div className="empty-icon">
+                                    ⌕
+                                </div>
+
+                                <h2>
+                                    No quizzes found
+                                </h2>
+
+                                <p>
+                                    Try searching for another title or subject.
+                                </p>
+
+                                <button
+                                    className="secondary-button"
+                                    onClick={() =>
+                                        setSearchTerm("")
+                                    }
+                                >
+                                    Clear Search
+                                </button>
 
                             </div>
 
                         )}
 
 
+                    {/* =================================
+                        QUIZ GRID
+                    ================================= */}
+
+                    {!error &&
+                        filteredQuizzes.length > 0 && (
+
+                            <div className="quiz-grid">
+
+
+                                {filteredQuizzes.map(
+                                    quiz => (
+
+                                        <div
+                                            className="quiz-card"
+                                            key={
+                                                quiz.quiz_id
+                                            }
+                                        >
+
+
+                                            {/* =========================
+                                                CARD HEADER
+                                            ========================= */}
+
+                                            <div className="quiz-card-header">
+
+
+                                                <div className="quiz-icon">
+                                                    ✦
+                                                </div>
+
+
+                                                <span
+                                                    className={`quiz-status ${
+                                                        quiz.quiz_type
+                                                            ?.toLowerCase()
+                                                            .replace(
+                                                                /\s+/g,
+                                                                "-"
+                                                            ) ||
+                                                        "quiz"
+                                                    }`}
+                                                >
+
+                                                    {
+                                                        quiz.quiz_type ||
+                                                        "Quiz"
+                                                    }
+
+                                                </span>
+
+                                            </div>
+
+
+                                            {/* =========================
+                                                CARD BODY
+                                            ========================= */}
+
+                                            <div className="quiz-card-body">
+
+
+                                                <h2>
+
+                                                    {
+                                                        quiz.title ||
+                                                        "Untitled Quiz"
+                                                    }
+
+                                                </h2>
+
+
+                                                <p className="quiz-subject">
+
+                                                    {
+                                                        quiz.subject ||
+                                                        "No subject"
+                                                    }
+
+                                                </p>
+
+
+                                                <div className="quiz-details">
+
+
+                                                    <span>
+
+                                                        {
+                                                            quiz.question_count ||
+                                                            0
+                                                        }
+
+                                                        {" "}
+
+                                                        Questions
+
+                                                    </span>
+
+
+                                                    <span>
+
+                                                        {
+                                                            quiz.total_marks ||
+                                                            0
+                                                        }
+
+                                                        {" "}
+
+                                                        Points
+
+                                                    </span>
+
+
+                                                    <span>
+
+                                                        {
+                                                            quiz.difficulty ||
+                                                            "Not specified"
+                                                        }
+
+                                                    </span>
+
+                                                </div>
+
+                                            </div>
+
+
+                                            {/* =========================
+                                                CARD FOOTER
+                                            ========================= */}
+
+                                            <div className="quiz-card-footer">
+
+
+                                                {/* EDIT */}
+
+                                                <button
+                                                    className="secondary-button"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/teacher/quizzes/${quiz.quiz_id}/edit`
+                                                        )
+                                                    }
+                                                >
+
+                                                    Edit
+
+                                                </button>
+
+
+                                                {/* OPEN */}
+
+                                                <button
+                                                    className="primary-button"
+                                                    onClick={() =>
+                                                        navigate(
+                                                            `/teacher/quizzes/${quiz.quiz_id}`
+                                                        )
+                                                    }
+                                                >
+
+                                                    Open Quiz
+
+                                                </button>
+
+
+                                                {/* DELETE */}
+
+                                                <button
+                                                    className="delete-button"
+                                                    disabled={
+                                                        deletingId ===
+                                                        quiz.quiz_id
+                                                    }
+                                                    onClick={() =>
+                                                        handleDelete(
+                                                            quiz.quiz_id,
+                                                            quiz.title ||
+                                                            "Untitled Quiz"
+                                                        )
+                                                    }
+                                                >
+
+                                                    {
+                                                        deletingId ===
+                                                        quiz.quiz_id
+                                                            ? "Deleting..."
+                                                            : "Delete"
+                                                    }
+
+                                                </button>
+
+                                            </div>
+
+
+                                        </div>
+
+                                    )
+                                )}
+
+                            </div>
+
+                        )}
+
                 </section>
 
-
             </main>
-
 
         </div>
 
     );
+
 }
 
 

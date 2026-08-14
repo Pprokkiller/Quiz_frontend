@@ -1,9 +1,14 @@
 import api from "./api";
 
 
-// =============================
+// ==========================================
+// OPTION SERVICE
+// ==========================================
+
+
+// ==========================================
 // Create Option
-// =============================
+// ==========================================
 
 export const createOption = async (
     optionData
@@ -18,9 +23,9 @@ export const createOption = async (
 };
 
 
-// =============================
-// Get Options
-// =============================
+// ==========================================
+// Get Options By Question ID
+// ==========================================
 
 export const getOptionsByQuestionId = async (
     questionId
@@ -34,9 +39,9 @@ export const getOptionsByQuestionId = async (
 };
 
 
-// =============================
+// ==========================================
 // Update Option
-// =============================
+// ==========================================
 
 export const updateOption = async (
     optionId,
@@ -52,9 +57,9 @@ export const updateOption = async (
 };
 
 
-// =============================
+// ==========================================
 // Delete Option
-// =============================
+// ==========================================
 
 export const deleteOption = async (
     optionId

@@ -1,12 +1,5 @@
 import api from "./api";
 
-
-// =============================
-// QUIZ
-// =============================
-
-
-// Create Quiz
 export const createQuiz = async (quizData) => {
 
     const response = await api.post(
@@ -18,7 +11,6 @@ export const createQuiz = async (quizData) => {
 };
 
 
-// Get Teacher Quizzes
 export const getTeacherQuizzes = async () => {
 
     const response = await api.get(
@@ -29,7 +21,6 @@ export const getTeacherQuizzes = async () => {
 };
 
 
-// Get Quiz By ID
 export const getQuizById = async (quizId) => {
 
     const response = await api.get(
@@ -40,7 +31,6 @@ export const getQuizById = async (quizId) => {
 };
 
 
-// Update Quiz
 export const updateQuiz = async (
     quizId,
     quizData
@@ -55,7 +45,6 @@ export const updateQuiz = async (
 };
 
 
-// Delete Quiz
 export const deleteQuiz = async (quizId) => {
 
     const response = await api.delete(

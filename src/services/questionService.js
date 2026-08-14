@@ -1,13 +1,16 @@
 import api from "./api";
 
 
-// =============================
-// Create Question
-// =============================
+// ==========================================
+// QUESTION SERVICE
+// ==========================================
 
-export const createQuestion = async (
-    questionData
-) => {
+
+// ==========================================
+// Create Question
+// ==========================================
+
+export const createQuestion = async (questionData) => {
 
     const response = await api.post(
         "/questions",
@@ -18,9 +21,9 @@ export const createQuestion = async (
 };
 
 
-// =============================
-// Get Questions
-// =============================
+// ==========================================
+// Get Questions By Quiz ID
+// ==========================================
 
 export const getQuestionsByQuizId = async (
     quizId
@@ -34,9 +37,9 @@ export const getQuestionsByQuizId = async (
 };
 
 
-// =============================
+// ==========================================
 // Update Question
-// =============================
+// ==========================================
 
 export const updateQuestion = async (
     questionId,
@@ -52,9 +55,9 @@ export const updateQuestion = async (
 };
 
 
-// =============================
+// ==========================================
 // Delete Question
-// =============================
+// ==========================================
 
 export const deleteQuestion = async (
     questionId
